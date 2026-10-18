@@ -1,5 +1,10 @@
 # StudyBud 🌱
 
+
+## 🚀 Live Demo
+
+**Try StudyBud here:** [https://studybud-gules.vercel.app](https://studybud-gules.vercel.app)
+
 **StudyBud** is an accessibility-first adaptive learning companion powered by **Gemma 4** (`gemma-4-26b-a4b-it`) and Google's official multimodal models via `@google/genai`, built with **Next.js 16 (App Router)**, **TypeScript**, and **Tailwind CSS**.
 
 StudyBud transforms static lecture notes, textbook diagrams, PDFs, and video/audio transcripts into an interactive, multi-sensory learning experience:
