@@ -506,6 +506,8 @@ export default function StudyBudHome() {
                 extractedMeta={extractedMeta}
                 onExtractedMetaChange={setExtractedMeta}
                 onLoadSample={handleLoadSample}
+                language={language}
+                simpleLanguage={simpleLanguage}
               />
 
               {/* Voice Question Input */}

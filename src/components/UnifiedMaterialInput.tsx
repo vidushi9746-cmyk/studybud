@@ -15,6 +15,7 @@ import {
   Sparkles,
   Info,
   X,
+  Globe,
 } from 'lucide-react';
 import { MaterialSourceType, ExtractedMaterial, SupportedLanguage } from '@/types/study';
 import { SAMPLE_LESSONS } from '@/lib/sampleLessons';
@@ -25,6 +26,8 @@ interface UnifiedMaterialInputProps {
   extractedMeta: ExtractedMaterial | null;
   onExtractedMetaChange: (meta: ExtractedMaterial | null) => void;
   onLoadSample: (sampleId: string) => void;
+  language?: SupportedLanguage;
+  simpleLanguage?: boolean;
 }
 
 export default function UnifiedMaterialInput({
@@ -33,6 +36,8 @@ export default function UnifiedMaterialInput({
   extractedMeta,
   onExtractedMetaChange,
   onLoadSample,
+  language = 'English',
+  simpleLanguage = false,
 }: UnifiedMaterialInputProps) {
   const [activeTab, setActiveTab] = useState<MaterialSourceType>('text');
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
@@ -176,16 +181,59 @@ export default function UnifiedMaterialInput({
     }
   };
 
-  // 3. Handle Video URL / Transcript
-  const handleProcessVideo = async () => {
-    if (!videoUrl.trim() && !videoTranscriptInput.trim()) {
-      setUploadError('Please provide a video URL or paste its transcript.');
+  // 3. Handle Video Explanation via Gemini 3.5 Flash
+  const handleExplainVideo = async () => {
+    if (!videoUrl.trim()) {
+      setUploadError('Please enter a public YouTube video URL (e.g. https://www.youtube.com/watch?v=...).');
       return;
     }
 
     setUploadError(null);
     setIsProcessing(true);
-    setProcessingStatus('Processing video material...');
+    setProcessingStatus(`Analyzing YouTube video with Gemini 3.5 Flash (${language}${simpleLanguage ? ' • Simplified' : ''})...`);
+
+    try {
+      const res = await fetch('/api/extract', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          type: 'video_url',
+          videoUrl: videoUrl.trim(),
+          language,
+          simpleLanguage,
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        throw new Error(data.details || data.error || data.warning || 'Failed to analyze YouTube video.');
+      }
+
+      onMaterialChange(data.text);
+      onExtractedMetaChange({
+        sourceType: 'video',
+        sourceName: data.sourceName,
+        text: data.text,
+        warning: data.warning,
+      });
+      setProcessingStatus('');
+    } catch (err: any) {
+      setUploadError(err.message || 'Error analyzing YouTube video.');
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
+  // Accessible Fallback: Load pasted transcript
+  const handleLoadTranscript = async () => {
+    if (!videoTranscriptInput.trim()) {
+      setUploadError('Please paste your video transcript or subtitle text first.');
+      return;
+    }
+
+    setUploadError(null);
+    setIsProcessing(true);
+    setProcessingStatus('Loading transcript into workspace...');
 
     try {
       const res = await fetch('/api/extract', {
@@ -194,25 +242,24 @@ export default function UnifiedMaterialInput({
         body: JSON.stringify({
           type: 'video_url',
           videoUrl: videoUrl.trim() || undefined,
-          transcriptText: videoTranscriptInput.trim() || undefined,
+          transcriptText: videoTranscriptInput.trim(),
         }),
       });
 
       const data = await res.json();
-      if (data.success && data.text) {
-        onMaterialChange(data.text);
-        onExtractedMetaChange({
-          sourceType: 'video',
-          sourceName: data.sourceName,
-          text: data.text,
-        });
-        setProcessingStatus('');
-      } else {
-        // Honest guidance when direct automated captions cannot be fetched
-        setUploadError(data.warning || data.details || 'Automated caption scraping is restricted for this video link. Please copy and paste the video transcript into the field below.');
+      if (!res.ok || !data.success) {
+        throw new Error(data.details || data.error || 'Failed to load transcript.');
       }
+
+      onMaterialChange(data.text);
+      onExtractedMetaChange({
+        sourceType: 'video',
+        sourceName: data.sourceName || videoUrl.trim() || 'Pasted Video Transcript',
+        text: data.text,
+      });
+      setProcessingStatus('');
     } catch (err: any) {
-      setUploadError(err.message || 'Error processing video.');
+      setUploadError(err.message || 'Error loading transcript.');
     } finally {
       setIsProcessing(false);
     }
@@ -461,52 +508,114 @@ export default function UnifiedMaterialInput({
 
       {/* 3. VIDEO LECTURE TAB */}
       {activeTab === 'video' && (
-        <div className="p-4 rounded-2xl bg-zinc-50/60 dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 space-y-3">
-          <div>
-            <label htmlFor="video-url-input" className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">
-              Video URL (YouTube, Vimeo, or educational link)
-            </label>
-            <div className="flex gap-2">
-              <input
-                id="video-url-input"
-                type="url"
-                value={videoUrl}
-                onChange={(e) => setVideoUrl(e.target.value)}
-                placeholder="https://www.youtube.com/watch?v=..."
-                className="flex-1 rounded-xl px-3.5 py-2 text-xs bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-amber-500"
-              />
+        <div className="p-4 rounded-2xl bg-zinc-50/60 dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 space-y-4">
+          {/* YouTube Direct Video Understanding Section */}
+          <div className="space-y-2">
+            <div className="flex flex-wrap items-center justify-between gap-1.5">
+              <label htmlFor="video-url-input" className="text-xs font-semibold text-zinc-800 dark:text-zinc-200 flex items-center gap-1.5">
+                <Video className="w-4 h-4 text-amber-500" />
+                <span>Public YouTube Lecture URL</span>
+              </label>
+              <div className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-amber-100 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-800/60">
+                <Globe className="w-3 h-3" />
+                <span>Explaining in {language}</span>
+                <span className="text-amber-400 dark:text-amber-600">•</span>
+                <span>{simpleLanguage ? 'Simplified (ELI5)' : 'Standard'}</span>
+              </div>
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-2">
+              <div className="relative flex-1">
+                <input
+                  id="video-url-input"
+                  type="url"
+                  value={videoUrl}
+                  onChange={(e) => setVideoUrl(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && !isProcessing && videoUrl.trim()) {
+                      e.preventDefault();
+                      handleExplainVideo();
+                    }
+                  }}
+                  placeholder="https://www.youtube.com/watch?v=... or https://youtu.be/..."
+                  className="w-full rounded-xl px-3.5 py-2.5 text-xs bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-amber-500 pr-8 shadow-xs"
+                />
+                {videoUrl && (
+                  <button
+                    type="button"
+                    onClick={() => setVideoUrl('')}
+                    title="Clear video URL"
+                    className="absolute right-2.5 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 p-0.5 rounded-md"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                  </button>
+                )}
+              </div>
+
               <button
                 type="button"
-                onClick={handleProcessVideo}
+                id="explain-video-btn"
+                onClick={handleExplainVideo}
                 disabled={isProcessing || !videoUrl.trim()}
-                className="px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-white text-xs font-semibold shadow-xs disabled:opacity-50"
+                className="px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-white text-xs font-semibold shadow-xs disabled:opacity-50 transition-all flex items-center justify-center gap-1.5 focus-visible:ring-2 focus-visible:ring-amber-500 shrink-0 cursor-pointer disabled:cursor-not-allowed"
               >
-                Fetch
+                {isProcessing ? (
+                  <>
+                    <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                    <span>Analyzing video...</span>
+                  </>
+                ) : (
+                  <>
+                    <Sparkles className="w-3.5 h-3.5" />
+                    <span>Explain this video</span>
+                  </>
+                )}
               </button>
+            </div>
+
+            <div className="flex items-start gap-1.5 pt-0.5 text-[11px] text-zinc-500 dark:text-zinc-400 leading-relaxed">
+              <Info className="w-3.5 h-3.5 text-amber-500 shrink-0 mt-0.5" />
+              <span>
+                Gemini 3.5 Flash watches the video frames and listens to spoken audio directly on the free tier (up to 8 hrs/day). Generates timestamped milestones, core concepts, and takeaways directly into the workspace below for editing and quizzes.
+              </span>
             </div>
           </div>
 
-          <div>
-            <label htmlFor="video-transcript-paste" className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1 flex items-center justify-between">
-              <span>Paste Video Transcript or Subtitles</span>
-              <span className="text-[11px] font-normal text-zinc-500">Accessible Fallback</span>
+          {/* Accessible Fallback: Subtitles & Transcripts */}
+          <div className="pt-3 border-t border-zinc-200 dark:border-zinc-800 space-y-2">
+            <label htmlFor="video-transcript-paste" className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 flex items-center justify-between">
+              <span className="flex items-center gap-1.5">
+                <FileText className="w-3.5 h-3.5 text-zinc-500" />
+                <span>Paste Video Transcript or Captions (SRT / VTT)</span>
+              </span>
+              <span className="text-[10px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded bg-zinc-200/70 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400">
+                Accessible Fallback
+              </span>
             </label>
+            <p className="text-[11px] text-zinc-500 dark:text-zinc-400">
+              If the video is private, unlisted, restricted, or from Vimeo, copy the transcript (e.g. from YouTube &ldquo;Show Transcript&rdquo;) or paste subtitle text here.
+            </p>
             <textarea
               id="video-transcript-paste"
-              rows={4}
+              rows={3}
               value={videoTranscriptInput}
               onChange={(e) => setVideoTranscriptInput(e.target.value)}
-              placeholder="If the video's automated captions cannot be fetched directly, copy the transcript (e.g. YouTube 'Show Transcript') and paste it here..."
-              className="w-full rounded-xl p-3 text-xs bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-amber-500"
+              placeholder="Paste full video transcript or SRT/VTT subtitles here..."
+              className="w-full rounded-xl p-3 text-xs bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-amber-500 placeholder:text-zinc-400"
             />
             {videoTranscriptInput.trim() && (
-              <button
-                type="button"
-                onClick={handleProcessVideo}
-                className="mt-2 px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-white text-xs font-semibold shadow-xs"
-              >
-                Load Transcript into Workspace
-              </button>
+              <div className="flex justify-end">
+                <button
+                  type="button"
+                  id="load-transcript-btn"
+                  onClick={handleLoadTranscript}
+                  disabled={isProcessing}
+                  className="px-3.5 py-1.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 dark:bg-zinc-700 dark:hover:bg-zinc-600 text-white text-xs font-semibold shadow-xs transition-all inline-flex items-center gap-1.5 disabled:opacity-50"
+                >
+                  <FileText className="w-3.5 h-3.5" />
+                  Load Transcript into Workspace
+                </button>
+              </div>
             )}
           </div>
         </div>

@@ -100,6 +100,7 @@ export interface ExtractApiRequest {
   videoUrl?: string;
   transcriptText?: string;
   language?: SupportedLanguage;
+  simpleLanguage?: boolean;
 }
 
 export interface ExtractApiResponse {
