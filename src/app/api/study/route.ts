@@ -89,6 +89,46 @@ function sanitizeQuizQuestions(items: unknown[]): QuizQuestion[] {
   });
 }
 
+// Quota-resilient content generator with verified fallback to gemini-3.5-flash-lite
+async function generateContentWithQuotaResilience(
+  ai: GoogleGenAI,
+  primaryModel: string,
+  contents: any,
+  config?: any
+): Promise<{ text: string; modelUsed: string }> {
+  try {
+    const res = await ai.models.generateContent({
+      model: primaryModel,
+      contents,
+      ...(config ? { config } : {}),
+    });
+    return { text: res.text || '', modelUsed: primaryModel };
+  } catch (primaryErr: any) {
+    const errorMsg = String(primaryErr?.message || primaryErr);
+    const status = primaryErr?.status || primaryErr?.code;
+
+    // Check if error is quota / TPM / rate limit (429 or RESOURCE_EXHAUSTED) or temporary capacity (503)
+    const isRateOrQuotaError = status === 429 || errorMsg.includes('RESOURCE_EXHAUSTED') || errorMsg.includes('429');
+    const isTemporaryError = status === 503 || errorMsg.includes('503') || errorMsg.includes('UNAVAILABLE');
+
+    const fallbackModel = 'gemini-3.5-flash-lite';
+    if ((isRateOrQuotaError || isTemporaryError) && primaryModel !== fallbackModel) {
+      try {
+        const fallbackRes = await ai.models.generateContent({
+          model: fallbackModel,
+          contents,
+          ...(config ? { config } : {}),
+        });
+        return { text: fallbackRes.text || '', modelUsed: fallbackModel };
+      } catch (fallbackErr: any) {
+        throw fallbackErr;
+      }
+    }
+
+    throw primaryErr;
+  }
+}
+
 // GET Handler - Health and configuration check
 export async function GET() {
   const { apiKey, modelName } = getEnvConfig();
@@ -192,18 +232,18 @@ export async function POST(req: Request) {
         `3. 💡 Key Takeaway / Quick Memory Hook`
       );
 
-      const response = await ai.models.generateContent({
-        model: modelName,
-        contents: promptParts.join('\n\n'),
-      });
+      const { text: rawExplanation, modelUsed: usedModel } = await generateContentWithQuotaResilience(
+        ai,
+        modelName,
+        promptParts.join('\n\n')
+      );
 
-      const rawExplanation = response.text || 'No explanation generated.';
-      const cleanExplanation = formatExplanationForDisplay(rawExplanation);
+      const cleanExplanation = formatExplanationForDisplay(rawExplanation || 'No explanation generated.');
 
       return NextResponse.json({
         success: true,
         action: 'explain',
-        model: modelName,
+        model: usedModel,
         explanation: cleanExplanation,
         weakConceptsAddressed: weakConcepts,
       });
@@ -249,22 +289,25 @@ export async function POST(req: Request) {
       );
 
       let responseText = '';
+      let usedModel = modelName;
       try {
-        const response = await ai.models.generateContent({
-          model: modelName,
-          contents: quizPromptParts.join('\n\n'),
-          config: {
-            responseMimeType: 'application/json',
-          },
-        });
-        responseText = response.text || '';
+        const res = await generateContentWithQuotaResilience(
+          ai,
+          modelName,
+          quizPromptParts.join('\n\n'),
+          { responseMimeType: 'application/json' }
+        );
+        responseText = res.text;
+        usedModel = res.modelUsed;
       } catch {
         // Fallback without responseMimeType in case of variation
-        const response = await ai.models.generateContent({
-          model: modelName,
-          contents: quizPromptParts.join('\n\n'),
-        });
-        responseText = response.text || '';
+        const res = await generateContentWithQuotaResilience(
+          ai,
+          modelName,
+          quizPromptParts.join('\n\n')
+        );
+        responseText = res.text;
+        usedModel = res.modelUsed;
       }
 
       const questions = parseQuizJson(responseText);
@@ -272,7 +315,7 @@ export async function POST(req: Request) {
       return NextResponse.json({
         success: true,
         action: 'quiz',
-        model: modelName,
+        model: usedModel,
         quiz: questions,
       });
     }
@@ -326,18 +369,18 @@ export async function POST(req: Request) {
         `4. ⚡ Quick Check-in Question (with answer hidden/revealed at the end)`
       );
 
-      const response = await ai.models.generateContent({
-        model: modelName,
-        contents: revisionPromptParts.join('\n\n'),
-      });
+      const { text: rawRevision, modelUsed: usedModel } = await generateContentWithQuotaResilience(
+        ai,
+        modelName,
+        revisionPromptParts.join('\n\n')
+      );
 
-      const rawRevision = response.text || 'No revision generated.';
-      const cleanRevision = formatExplanationForDisplay(rawRevision);
+      const cleanRevision = formatExplanationForDisplay(rawRevision || 'No revision generated.');
 
       return NextResponse.json({
         success: true,
         action: 'revise',
-        model: modelName,
+        model: usedModel,
         revision: cleanRevision,
         weakConceptsAddressed: weakConcepts,
       });
@@ -348,11 +391,30 @@ export async function POST(req: Request) {
       { status: 400 }
     );
   } catch (err: any) {
-    const errorMessage = err?.message || 'An error occurred while communicating with the Gemma model.';
+    const errorMessage = err?.message || 'An error occurred while communicating with the study model.';
+    const isQuota =
+      err?.status === 429 ||
+      errorMessage.includes('429') ||
+      errorMessage.includes('RESOURCE_EXHAUSTED') ||
+      errorMessage.includes('quota');
+
+    if (isQuota) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'AI Study Assistant is momentarily busy (Rate limit reached)',
+          details:
+            'Google AI Studio free-tier capacity or rate limits have been reached. Your study text is safely preserved in the workspace—please wait 20-30 seconds and try again.',
+          retryAfterSeconds: 30,
+        },
+        { status: 429 }
+      );
+    }
+
     return NextResponse.json(
       {
         success: false,
-        error: 'Gemma API Error',
+        error: 'Study API Error',
         details: errorMessage,
       },
       { status: 502 }

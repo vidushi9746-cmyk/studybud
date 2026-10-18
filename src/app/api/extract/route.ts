@@ -3,6 +3,7 @@ import { GoogleGenAI } from '@google/genai';
 import { extractText } from 'unpdf';
 import { ExtractApiRequest, ExtractApiResponse } from '@/types/study';
 import { transcribeMedia } from '@/lib/transcriptionAdapter';
+import { explainYouTubeVideo, isPublicYouTubeUrl } from '@/lib/youtubeAdapter';
 
 function getEnvConfig() {
   const apiKey = process.env.GEMINI_API_KEY?.trim();
@@ -25,7 +26,7 @@ export async function POST(req: Request) {
     );
   }
 
-  const { type, fileBase64, mimeType = '', fileName = 'document', videoUrl, transcriptText } = body;
+  const { type, fileBase64, mimeType = '', fileName = 'document', videoUrl, transcriptText, language, simpleLanguage } = body;
   const { apiKey, modelName } = getEnvConfig();
 
   // -------------------------------------------------------------
@@ -113,19 +114,42 @@ Carefully transcribe all readable text, section headings, numbers, and key formu
 Preserve the page structure where possible with "--- Page X ---".
 If the document contains no readable text, symbols, or handwriting, respond EXACTLY with: NO_READABLE_TEXT.`;
 
-      const response = await ai.models.generateContent({
-        model: modelName,
-        contents: [
-          {
-            parts: [
-              { inlineData: { mimeType: 'application/pdf', data: fileBase64 } },
-              { text: prompt },
+      let ocrText = '';
+      let usedOcrModel = modelName;
+      try {
+        const response = await ai.models.generateContent({
+          model: modelName,
+          contents: [
+            {
+              parts: [
+                { inlineData: { mimeType: 'application/pdf', data: fileBase64 } },
+                { text: prompt },
+              ],
+            },
+          ],
+        });
+        ocrText = (response.text || '').trim();
+      } catch (primaryOcrErr: any) {
+        const msg = String(primaryOcrErr?.message || primaryOcrErr);
+        const isQuota = primaryOcrErr?.status === 429 || msg.includes('RESOURCE_EXHAUSTED') || msg.includes('429');
+        if (isQuota && modelName !== 'gemini-3.5-flash-lite') {
+          usedOcrModel = 'gemini-3.5-flash-lite';
+          const fallbackRes = await ai.models.generateContent({
+            model: 'gemini-3.5-flash-lite',
+            contents: [
+              {
+                parts: [
+                  { inlineData: { mimeType: 'application/pdf', data: fileBase64 } },
+                  { text: prompt },
+                ],
+              },
             ],
-          },
-        ],
-      });
-
-      const ocrText = (response.text || '').trim();
+          });
+          ocrText = (fallbackRes.text || '').trim();
+        } else {
+          throw primaryOcrErr;
+        }
+      }
 
       if (!ocrText || ocrText.includes('NO_READABLE_TEXT')) {
         return NextResponse.json(
@@ -145,9 +169,20 @@ If the document contains no readable text, symbols, or handwriting, respond EXAC
         text: ocrText,
         pageCount,
         isScannedPdf: true,
-        warning: 'Extracted via Gemma 4 OCR (scanned document). Please review before studying.',
+        warning: `Extracted via ${usedOcrModel} OCR (scanned document). Please review before studying.`,
       } as ExtractApiResponse);
     } catch (ocrErr: any) {
+      const isQuota = ocrErr?.status === 429 || String(ocrErr?.message || '').includes('429') || String(ocrErr?.message || '').includes('RESOURCE_EXHAUSTED');
+      if (isQuota) {
+        return NextResponse.json(
+          {
+            success: false,
+            error: 'PDF OCR quota limit reached',
+            details: 'Google AI Studio rate limits or free-tier capacity have been reached. Please wait a moment before trying again, or copy and paste the document text directly into the workspace.',
+          },
+          { status: 429 }
+        );
+      }
       return NextResponse.json(
         {
           success: false,
@@ -217,26 +252,49 @@ Provide an objective, highly accessible educational breakdown:
 
 Be precise, student-friendly, and faithful to what is visibly present.`;
 
-      const response = await ai.models.generateContent({
-        model: modelName,
-        contents: [
-          {
-            parts: [
-              { inlineData: { mimeType: normalizedMime || 'image/png', data: fileBase64 } },
-              { text: prompt },
+      let extractedDescription = '';
+      let usedImageModel = modelName;
+      try {
+        const response = await ai.models.generateContent({
+          model: modelName,
+          contents: [
+            {
+              parts: [
+                { inlineData: { mimeType: normalizedMime || 'image/png', data: fileBase64 } },
+                { text: prompt },
+              ],
+            },
+          ],
+        });
+        extractedDescription = response.text || '';
+      } catch (primaryImgErr: any) {
+        const msg = String(primaryImgErr?.message || primaryImgErr);
+        const isQuota = primaryImgErr?.status === 429 || msg.includes('RESOURCE_EXHAUSTED') || msg.includes('429');
+        if (isQuota && modelName !== 'gemini-3.5-flash-lite') {
+          usedImageModel = 'gemini-3.5-flash-lite';
+          const fallbackRes = await ai.models.generateContent({
+            model: 'gemini-3.5-flash-lite',
+            contents: [
+              {
+                parts: [
+                  { inlineData: { mimeType: normalizedMime || 'image/png', data: fileBase64 } },
+                  { text: prompt },
+                ],
+              },
             ],
-          },
-        ],
-      });
-
-      const extractedDescription = response.text || '';
+          });
+          extractedDescription = fallbackRes.text || '';
+        } else {
+          throw primaryImgErr;
+        }
+      }
 
       if (!extractedDescription.trim()) {
         return NextResponse.json(
           {
             success: false,
             error: 'No content recognized',
-            details: 'Gemma 4 was unable to extract any text or diagram features from this image.',
+            details: 'Unable to extract any text or diagram features from this image.',
           },
           { status: 422 }
         );
@@ -246,15 +304,26 @@ Be precise, student-friendly, and faithful to what is visibly present.`;
         success: true,
         sourceType: 'image',
         sourceName: fileName,
-        description: 'Visual diagram description and extracted text generated by Gemma 4.',
+        description: `Visual diagram description and extracted text generated by ${usedImageModel}.`,
         text: extractedDescription,
       } as ExtractApiResponse);
     } catch (err: any) {
+      const isQuota = err?.status === 429 || String(err?.message || '').includes('429') || String(err?.message || '').includes('RESOURCE_EXHAUSTED');
+      if (isQuota) {
+        return NextResponse.json(
+          {
+            success: false,
+            error: 'Image analysis quota limit reached',
+            details: 'Google AI Studio rate limits or free-tier capacity have been reached. Please wait a moment and try again, or paste your study notes directly.',
+          },
+          { status: 429 }
+        );
+      }
       return NextResponse.json(
         {
           success: false,
           error: 'Image analysis error',
-          details: err.message || 'Error occurred while analyzing image with Gemma.',
+          details: err.message || 'Error occurred while analyzing image.',
         },
         { status: 502 }
       );
@@ -262,12 +331,22 @@ Be precise, student-friendly, and faithful to what is visibly present.`;
   }
 
   // -------------------------------------------------------------
-  // 3. VIDEO URL & TRANSCRIPTS
+  // 3. VIDEO URL & DIRECT YOUTUBE UNDERSTANDING
   // -------------------------------------------------------------
   if (type === 'video_url') {
+    // Accessible fallback: if student pasted a transcript directly, accept and load it into workspace
+    if (transcriptText && transcriptText.trim().length > 0) {
+      return NextResponse.json({
+        success: true,
+        sourceType: 'video',
+        sourceName: videoUrl?.trim() || 'Pasted Video Transcript',
+        text: transcriptText.trim(),
+      } as ExtractApiResponse);
+    }
+
     if (!videoUrl || !videoUrl.trim()) {
       return NextResponse.json(
-        { success: false, error: 'Please provide a valid video URL.' },
+        { success: false, error: 'Please provide a valid video URL or paste its transcript.' },
         { status: 400 }
       );
     }
@@ -277,33 +356,58 @@ Be precise, student-friendly, and faithful to what is visibly present.`;
       new URL(cleanUrl);
     } catch {
       return NextResponse.json(
-        { success: false, error: 'Invalid URL format.', details: 'Please enter a valid HTTP or HTTPS video URL.' },
+        {
+          success: false,
+          error: 'Invalid URL format',
+          details: 'Please enter a valid HTTP or HTTPS video URL (e.g. https://www.youtube.com/watch?v=...).',
+        },
         { status: 400 }
       );
     }
 
-    if (transcriptText && transcriptText.trim().length > 0) {
+    // Direct YouTube multimodal analysis via Gemini API
+    if (isPublicYouTubeUrl(cleanUrl)) {
+      const result = await explainYouTubeVideo({
+        videoUrl: cleanUrl,
+        language,
+        simpleLanguage,
+      });
+
+      if (!result.success) {
+        return NextResponse.json(
+          {
+            success: false,
+            error: result.error || 'Video analysis failed',
+            details:
+              result.details ||
+              'Unable to analyze this YouTube video directly. You can copy the video transcript or subtitle text (e.g. from YouTube "Show Transcript") and paste it into the field below.',
+          },
+          { status: 422 }
+        );
+      }
+
       return NextResponse.json({
         success: true,
         sourceType: 'video',
-        sourceName: cleanUrl,
-        text: transcriptText.trim(),
+        sourceName: result.canonicalUrl || cleanUrl,
+        text: result.text || '',
+        warning: result.warning,
       } as ExtractApiResponse);
     }
 
-    const isYouTube = cleanUrl.includes('youtube.com') || cleanUrl.includes('youtu.be');
-    const isVimeo = cleanUrl.includes('vimeo.com');
-
-    return NextResponse.json({
-      success: false,
-      sourceType: 'video',
-      sourceName: cleanUrl,
-      text: '',
-      warning: isYouTube || isVimeo
-        ? 'Direct automated caption scraping is restricted by external video platforms. Please copy the video transcript or subtitle text (e.g. from the video "Show Transcript" button) and paste it below.'
-        : 'Automated subtitles could not be retrieved from this link. Please paste the lecture transcript directly into the workspace.',
-      details: 'StudyBud provides full learning, quiz, and adaptive revision once transcript text is supplied.',
-    } as ExtractApiResponse);
+    // Non-YouTube video link (e.g., Vimeo, direct video links)
+    return NextResponse.json(
+      {
+        success: false,
+        sourceType: 'video',
+        sourceName: cleanUrl,
+        text: '',
+        error: 'Direct video analysis requires a public YouTube link',
+        details:
+          'Direct video understanding is currently supported for public YouTube lecture links. For Vimeo or other platforms, please copy the video transcript or subtitle text and paste it into the workspace below.',
+      } as ExtractApiResponse,
+      { status: 400 }
+    );
   }
 
   // -------------------------------------------------------------

@@ -135,18 +135,7 @@ export async function transcribeMedia(
     } catch (err: any) {
       const errMsg = err?.message || '';
 
-      // Gracefully handle rate-limits (HTTP 429)
-      if (errMsg.includes('429') || errMsg.includes('RESOURCE_EXHAUSTED')) {
-        return {
-          success: false,
-          error: 'Free-tier rate limit reached',
-          details:
-            'Google AI Studio free-tier rate limit was reached. Please wait a moment before trying again, or copy and paste the transcript directly.',
-          requiresManualInput: true,
-        };
-      }
-
-      // Gracefully handle malformed or empty audio streams (HTTP 400)
+      // Handle malformed or empty audio streams (HTTP 400) - no fallback needed
       if (errMsg.includes('400') || errMsg.includes('INVALID_ARGUMENT')) {
         return {
           success: false,
@@ -157,12 +146,12 @@ export async function transcribeMedia(
         };
       }
 
-      // If gemini-3.5-transcribe encounters another error, try gemini-3.8-flash fallback
+      // Safe fallback to verified gemini-3.5-flash-lite (avoid exhausted gemini-3.8-flash)
       try {
         const ai = new GoogleGenAI({ apiKey: geminiApiKey });
         const base64Data = Buffer.from(fileBuffer).toString('base64');
         const fallbackRes = await ai.models.generateContent({
-          model: 'gemini-3.8-flash',
+          model: 'gemini-3.5-flash-lite',
           contents: [
             {
               parts: [
@@ -179,17 +168,27 @@ export async function transcribeMedia(
           return {
             success: true,
             text,
-            provider: 'Gemini 3.8 Flash (Fallback)',
+            provider: 'Gemini 3.5 Flash Lite (Fallback)',
           };
         }
-      } catch {
-        // Fall through to error reporting
+      } catch (fallbackErr: any) {
+        const fbMsg = fallbackErr?.message || '';
+        if (fbMsg.includes('429') || fbMsg.includes('RESOURCE_EXHAUSTED')) {
+          return {
+            success: false,
+            error: 'Audio transcription quota limit reached',
+            details:
+              'Google AI Studio free-tier audio transcription limits have been reached. Please wait a moment and try again, or paste your lecture transcript directly into the workspace.',
+            requiresManualInput: true,
+          };
+        }
       }
 
       return {
         success: false,
-        error: 'Audio transcription error',
-        details: errMsg || 'An error occurred while communicating with the transcription model.',
+        error: 'Audio transcription quota or rate limit reached',
+        details:
+          'Google AI Studio free-tier transcription is temporarily busy or quota-limited. Please wait a moment before trying again, or copy and paste the lecture transcript directly into the workspace.',
         requiresManualInput: true,
       };
     }
