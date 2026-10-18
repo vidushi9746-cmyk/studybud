@@ -323,9 +323,9 @@ export default function UnifiedMaterialInput({
 
   return (
     <div className="space-y-4">
-      {/* Accessible Source Selector Tabs */}
+      {/* Multimodal Source Selectors with Capability Descriptions */}
       <div
-        className="flex flex-wrap items-center gap-1.5 p-1 bg-zinc-100 dark:bg-zinc-800/80 rounded-2xl"
+        className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5"
         role="tablist"
         aria-label="Study material input source options"
       >
@@ -334,14 +334,24 @@ export default function UnifiedMaterialInput({
           role="tab"
           aria-selected={activeTab === 'text'}
           onClick={() => setActiveTab('text')}
-          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all focus-visible:ring-2 focus-visible:ring-amber-500 ${
+          className={`flex flex-col items-start p-3 rounded-2xl text-left border transition-all cursor-pointer focus-visible:ring-2 focus-visible:ring-indigo-500 ${
             activeTab === 'text'
-              ? 'bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 shadow-xs'
-              : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100'
+              ? 'bg-indigo-50/80 dark:bg-indigo-950/60 border-indigo-600 dark:border-indigo-500 text-indigo-950 dark:text-indigo-100 shadow-xs ring-1 ring-indigo-500/20'
+              : 'bg-white dark:bg-stone-900 border-stone-200/90 dark:border-stone-800 text-stone-700 dark:text-stone-300 hover:border-indigo-300 dark:hover:border-stone-700 hover:bg-stone-50/60 dark:hover:bg-stone-800/60'
           }`}
         >
-          <FileText className="w-3.5 h-3.5 text-amber-500" aria-hidden="true" />
-          <span>Pasted Text</span>
+          <div className="flex items-center justify-between w-full mb-1.5">
+            <span className={`p-1.5 rounded-xl ${activeTab === 'text' ? 'bg-indigo-600 text-white shadow-xs' : 'bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-400'}`}>
+              <FileText className="w-4 h-4" aria-hidden="true" />
+            </span>
+            {activeTab === 'text' && (
+              <span className="w-2 h-2 rounded-full bg-indigo-600 dark:bg-indigo-400" />
+            )}
+          </div>
+          <span className="text-xs font-bold leading-tight">Pasted Text</span>
+          <span className="text-[11px] text-stone-500 dark:text-stone-400 mt-0.5 leading-snug">
+            Type or paste notes
+          </span>
         </button>
 
         <button
@@ -349,14 +359,24 @@ export default function UnifiedMaterialInput({
           role="tab"
           aria-selected={activeTab === 'pdf'}
           onClick={() => setActiveTab('pdf')}
-          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all focus-visible:ring-2 focus-visible:ring-amber-500 ${
+          className={`flex flex-col items-start p-3 rounded-2xl text-left border transition-all cursor-pointer focus-visible:ring-2 focus-visible:ring-indigo-500 ${
             activeTab === 'pdf'
-              ? 'bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 shadow-xs'
-              : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100'
+              ? 'bg-indigo-50/80 dark:bg-indigo-950/60 border-indigo-600 dark:border-indigo-500 text-indigo-950 dark:text-indigo-100 shadow-xs ring-1 ring-indigo-500/20'
+              : 'bg-white dark:bg-stone-900 border-stone-200/90 dark:border-stone-800 text-stone-700 dark:text-stone-300 hover:border-indigo-300 dark:hover:border-stone-700 hover:bg-stone-50/60 dark:hover:bg-stone-800/60'
           }`}
         >
-          <FileUp className="w-3.5 h-3.5 text-amber-500" aria-hidden="true" />
-          <span>PDF Upload</span>
+          <div className="flex items-center justify-between w-full mb-1.5">
+            <span className={`p-1.5 rounded-xl ${activeTab === 'pdf' ? 'bg-indigo-600 text-white shadow-xs' : 'bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-400'}`}>
+              <FileUp className="w-4 h-4" aria-hidden="true" />
+            </span>
+            {activeTab === 'pdf' && (
+              <span className="w-2 h-2 rounded-full bg-indigo-600 dark:bg-indigo-400" />
+            )}
+          </div>
+          <span className="text-xs font-bold leading-tight">PDF Document</span>
+          <span className="text-[11px] text-stone-500 dark:text-stone-400 mt-0.5 leading-snug">
+            Slides &amp; book chapters
+          </span>
         </button>
 
         <button
@@ -364,14 +384,24 @@ export default function UnifiedMaterialInput({
           role="tab"
           aria-selected={activeTab === 'image'}
           onClick={() => setActiveTab('image')}
-          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all focus-visible:ring-2 focus-visible:ring-amber-500 ${
+          className={`flex flex-col items-start p-3 rounded-2xl text-left border transition-all cursor-pointer focus-visible:ring-2 focus-visible:ring-indigo-500 ${
             activeTab === 'image'
-              ? 'bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 shadow-xs'
-              : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100'
+              ? 'bg-indigo-50/80 dark:bg-indigo-950/60 border-indigo-600 dark:border-indigo-500 text-indigo-950 dark:text-indigo-100 shadow-xs ring-1 ring-indigo-500/20'
+              : 'bg-white dark:bg-stone-900 border-stone-200/90 dark:border-stone-800 text-stone-700 dark:text-stone-300 hover:border-indigo-300 dark:hover:border-stone-700 hover:bg-stone-50/60 dark:hover:bg-stone-800/60'
           }`}
         >
-          <ImageIcon className="w-3.5 h-3.5 text-amber-500" aria-hidden="true" />
-          <span>Image / Diagram</span>
+          <div className="flex items-center justify-between w-full mb-1.5">
+            <span className={`p-1.5 rounded-xl ${activeTab === 'image' ? 'bg-indigo-600 text-white shadow-xs' : 'bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-400'}`}>
+              <ImageIcon className="w-4 h-4" aria-hidden="true" />
+            </span>
+            {activeTab === 'image' && (
+              <span className="w-2 h-2 rounded-full bg-indigo-600 dark:bg-indigo-400" />
+            )}
+          </div>
+          <span className="text-xs font-bold leading-tight">Image / Diagram</span>
+          <span className="text-[11px] text-stone-500 dark:text-stone-400 mt-0.5 leading-snug">
+            Visual label extraction
+          </span>
         </button>
 
         <button
@@ -379,14 +409,24 @@ export default function UnifiedMaterialInput({
           role="tab"
           aria-selected={activeTab === 'video'}
           onClick={() => setActiveTab('video')}
-          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all focus-visible:ring-2 focus-visible:ring-amber-500 ${
+          className={`flex flex-col items-start p-3 rounded-2xl text-left border transition-all cursor-pointer focus-visible:ring-2 focus-visible:ring-indigo-500 ${
             activeTab === 'video'
-              ? 'bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 shadow-xs'
-              : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100'
+              ? 'bg-indigo-50/80 dark:bg-indigo-950/60 border-indigo-600 dark:border-indigo-500 text-indigo-950 dark:text-indigo-100 shadow-xs ring-1 ring-indigo-500/20'
+              : 'bg-white dark:bg-stone-900 border-stone-200/90 dark:border-stone-800 text-stone-700 dark:text-stone-300 hover:border-indigo-300 dark:hover:border-stone-700 hover:bg-stone-50/60 dark:hover:bg-stone-800/60'
           }`}
         >
-          <Video className="w-3.5 h-3.5 text-amber-500" aria-hidden="true" />
-          <span>Video Lecture</span>
+          <div className="flex items-center justify-between w-full mb-1.5">
+            <span className={`p-1.5 rounded-xl ${activeTab === 'video' ? 'bg-indigo-600 text-white shadow-xs' : 'bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-400'}`}>
+              <Video className="w-4 h-4" aria-hidden="true" />
+            </span>
+            {activeTab === 'video' && (
+              <span className="w-2 h-2 rounded-full bg-indigo-600 dark:bg-indigo-400" />
+            )}
+          </div>
+          <span className="text-xs font-bold leading-tight">Video Lecture</span>
+          <span className="text-[11px] text-stone-500 dark:text-stone-400 mt-0.5 leading-snug">
+            YouTube direct video
+          </span>
         </button>
 
         <button
@@ -394,27 +434,38 @@ export default function UnifiedMaterialInput({
           role="tab"
           aria-selected={activeTab === 'audio'}
           onClick={() => setActiveTab('audio')}
-          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all focus-visible:ring-2 focus-visible:ring-amber-500 ${
+          className={`flex flex-col items-start p-3 rounded-2xl text-left border transition-all cursor-pointer focus-visible:ring-2 focus-visible:ring-indigo-500 col-span-2 sm:col-span-1 ${
             activeTab === 'audio'
-              ? 'bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 shadow-xs'
-              : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100'
+              ? 'bg-indigo-50/80 dark:bg-indigo-950/60 border-indigo-600 dark:border-indigo-500 text-indigo-950 dark:text-indigo-100 shadow-xs ring-1 ring-indigo-500/20'
+              : 'bg-white dark:bg-stone-900 border-stone-200/90 dark:border-stone-800 text-stone-700 dark:text-stone-300 hover:border-indigo-300 dark:hover:border-stone-700 hover:bg-stone-50/60 dark:hover:bg-stone-800/60'
           }`}
         >
-          <Mic className="w-3.5 h-3.5 text-amber-500" aria-hidden="true" />
-          <span>Audio File</span>
+          <div className="flex items-center justify-between w-full mb-1.5">
+            <span className={`p-1.5 rounded-xl ${activeTab === 'audio' ? 'bg-indigo-600 text-white shadow-xs' : 'bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-400'}`}>
+              <Mic className="w-4 h-4" aria-hidden="true" />
+            </span>
+            {activeTab === 'audio' && (
+              <span className="w-2 h-2 rounded-full bg-indigo-600 dark:bg-indigo-400" />
+            )}
+          </div>
+          <span className="text-xs font-bold leading-tight">Audio File</span>
+          <span className="text-[11px] text-stone-500 dark:text-stone-400 mt-0.5 leading-snug">
+            Lecture speech to text
+          </span>
         </button>
       </div>
 
       {/* Screen Reader and Visual Processing Status */}
+      {/* Screen Reader and Visual Processing Status */}
       <div aria-live="polite" className="text-xs">
         {isProcessing && (
-          <div className="p-3 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-300 dark:border-amber-800 text-amber-900 dark:text-amber-200 flex items-center gap-2">
-            <span className="w-3.5 h-3.5 border-2 border-amber-600 border-t-transparent rounded-full animate-spin" />
+          <div className="p-3.5 rounded-2xl bg-indigo-50/90 dark:bg-indigo-950/40 border border-indigo-200/80 dark:border-indigo-800 text-indigo-950 dark:text-indigo-200 flex items-center gap-2.5 shadow-xs">
+            <span className="w-4 h-4 border-2 border-indigo-600 border-t-transparent rounded-full animate-spin shrink-0" />
             <span className="font-medium">{processingStatus}</span>
           </div>
         )}
         {uploadError && (
-          <div className="p-3 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-300 dark:border-rose-800 text-rose-900 dark:text-rose-200 flex items-start gap-2">
+          <div className="p-3.5 rounded-2xl bg-rose-50/90 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 text-rose-950 dark:text-rose-200 flex items-start gap-2.5 shadow-xs">
             <AlertCircle className="w-4 h-4 text-rose-600 dark:text-rose-400 shrink-0 mt-0.5" />
             <div className="flex-1">
               <span className="font-semibold block mb-0.5">Extraction Notice</span>
@@ -423,7 +474,7 @@ export default function UnifiedMaterialInput({
             <button
               type="button"
               onClick={() => setUploadError(null)}
-              className="text-xs hover:underline text-rose-700"
+              className="text-xs font-medium hover:underline text-rose-700 dark:text-rose-300 cursor-pointer"
             >
               Dismiss
             </button>
@@ -433,9 +484,26 @@ export default function UnifiedMaterialInput({
 
       {/* TAB CONTENT AREAS */}
 
+      {/* 0. PASTED TEXT GUIDANCE BAY */}
+      {activeTab === 'text' && (
+        <div className="p-3.5 rounded-2xl bg-stone-50/80 dark:bg-stone-900/40 border border-stone-200/80 dark:border-stone-800 text-xs text-stone-600 dark:text-stone-300 flex items-center justify-between gap-3 shadow-2xs">
+          <div className="flex items-center gap-2">
+            <span className="p-1 rounded-lg bg-indigo-100/70 dark:bg-indigo-950/70 text-indigo-700 dark:text-indigo-300">
+              <FileText className="w-3.5 h-3.5" />
+            </span>
+            <span>
+              Type or paste your lecture notes, textbook chapters, or summary outline directly into the study workspace below.
+            </span>
+          </div>
+          <span className="text-[11px] text-stone-400 font-mono hidden sm:inline">
+            Direct Editor
+          </span>
+        </div>
+      )}
+
       {/* 1. PDF UPLOAD TAB */}
       {activeTab === 'pdf' && (
-        <div className="p-5 rounded-2xl border-2 border-dashed border-amber-200 dark:border-zinc-700 bg-amber-50/30 dark:bg-zinc-950/40 text-center space-y-3">
+        <div className="p-6 rounded-3xl border-2 border-dashed border-indigo-200/80 hover:border-indigo-400 dark:border-stone-700/80 bg-indigo-50/20 dark:bg-stone-900/40 text-center space-y-3 transition-colors">
           <input
             ref={pdfInputRef}
             type="file"
@@ -444,12 +512,12 @@ export default function UnifiedMaterialInput({
             className="hidden"
             id="pdf-file-upload"
           />
-          <div className="mx-auto w-10 h-10 rounded-full bg-amber-100 dark:bg-amber-950/70 text-amber-800 dark:text-amber-300 flex items-center justify-center">
+          <div className="mx-auto w-11 h-11 rounded-2xl bg-indigo-100/70 dark:bg-indigo-950/70 text-indigo-700 dark:text-indigo-300 flex items-center justify-center shadow-xs">
             <FileUp className="w-5 h-5" />
           </div>
           <div>
-            <h4 className="text-sm font-bold text-zinc-900 dark:text-zinc-100">Upload PDF Study Document</h4>
-            <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">
+            <h4 className="text-sm font-bold text-stone-900 dark:text-stone-100">Upload PDF Study Document</h4>
+            <p className="text-xs text-stone-500 dark:text-stone-400 mt-0.5 max-w-md mx-auto">
               Extracts text preserving page numbers. Includes automatic Gemma 4 OCR fallback for scanned pages (up to 20MB).
             </p>
           </div>
@@ -457,7 +525,7 @@ export default function UnifiedMaterialInput({
             type="button"
             onClick={() => pdfInputRef.current?.click()}
             disabled={isProcessing}
-            className="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-semibold text-xs shadow-sm transition-all inline-flex items-center gap-1.5 focus-visible:ring-2 focus-visible:ring-amber-500 disabled:opacity-50"
+            className="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs shadow-xs transition-all inline-flex items-center gap-1.5 focus-visible:ring-2 focus-visible:ring-indigo-500 disabled:opacity-50 cursor-pointer"
           >
             <Upload className="w-3.5 h-3.5" />
             Choose PDF File
@@ -467,7 +535,7 @@ export default function UnifiedMaterialInput({
 
       {/* 2. IMAGE / DIAGRAM TAB */}
       {activeTab === 'image' && (
-        <div className="p-5 rounded-2xl border-2 border-dashed border-amber-200 dark:border-zinc-700 bg-amber-50/30 dark:bg-zinc-950/40 text-center space-y-3">
+        <div className="p-6 rounded-3xl border-2 border-dashed border-indigo-200/80 hover:border-indigo-400 dark:border-stone-700/80 bg-indigo-50/20 dark:bg-stone-900/40 text-center space-y-3 transition-colors">
           <input
             ref={imageInputRef}
             type="file"
@@ -476,20 +544,20 @@ export default function UnifiedMaterialInput({
             className="hidden"
             id="image-file-upload"
           />
-          <div className="mx-auto w-10 h-10 rounded-full bg-amber-100 dark:bg-amber-950/70 text-amber-800 dark:text-amber-300 flex items-center justify-center">
+          <div className="mx-auto w-11 h-11 rounded-2xl bg-indigo-100/70 dark:bg-indigo-950/70 text-indigo-700 dark:text-indigo-300 flex items-center justify-center shadow-xs">
             <ImageIcon className="w-5 h-5" />
           </div>
           <div>
-            <h4 className="text-sm font-bold text-zinc-900 dark:text-zinc-100">Upload Textbook Image or Diagram</h4>
-            <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">
-              Gemma 4 will describe the diagram visually, transcribe labels and handwritten notes, and extract concepts (PNG, JPEG, WebP, up to 10MB).
+            <h4 className="text-sm font-bold text-stone-900 dark:text-stone-100">Upload Textbook Image or Diagram</h4>
+            <p className="text-xs text-stone-500 dark:text-stone-400 mt-0.5 max-w-md mx-auto">
+              Gemma 4 describes the diagram visually, transcribes labels and handwritten notes, and extracts core concepts (PNG, JPEG, WebP, up to 10MB).
             </p>
           </div>
           <button
             type="button"
             onClick={() => imageInputRef.current?.click()}
             disabled={isProcessing}
-            className="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-semibold text-xs shadow-sm transition-all inline-flex items-center gap-1.5 focus-visible:ring-2 focus-visible:ring-amber-500 disabled:opacity-50"
+            className="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs shadow-xs transition-all inline-flex items-center gap-1.5 focus-visible:ring-2 focus-visible:ring-indigo-500 disabled:opacity-50 cursor-pointer"
           >
             <Upload className="w-3.5 h-3.5" />
             Choose Image File
@@ -499,7 +567,7 @@ export default function UnifiedMaterialInput({
               <img
                 src={imagePreviewUrl}
                 alt="Uploaded study diagram thumbnail"
-                className="max-h-36 rounded-xl border border-zinc-200 dark:border-zinc-800 shadow-xs"
+                className="max-h-36 rounded-2xl border border-stone-200 dark:border-stone-800 shadow-xs"
               />
             </div>
           )}
@@ -508,18 +576,18 @@ export default function UnifiedMaterialInput({
 
       {/* 3. VIDEO LECTURE TAB */}
       {activeTab === 'video' && (
-        <div className="p-4 rounded-2xl bg-zinc-50/60 dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 space-y-4">
+        <div className="p-5 rounded-3xl bg-stone-50/70 dark:bg-stone-900/50 border border-stone-200 dark:border-stone-800 space-y-4">
           {/* YouTube Direct Video Understanding Section */}
           <div className="space-y-2">
             <div className="flex flex-wrap items-center justify-between gap-1.5">
-              <label htmlFor="video-url-input" className="text-xs font-semibold text-zinc-800 dark:text-zinc-200 flex items-center gap-1.5">
-                <Video className="w-4 h-4 text-amber-500" />
+              <label htmlFor="video-url-input" className="text-xs font-semibold text-stone-800 dark:text-stone-200 flex items-center gap-1.5">
+                <Video className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
                 <span>Public YouTube Lecture URL</span>
               </label>
-              <div className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-amber-100 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-800/60">
+              <div className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border border-indigo-200/70 dark:border-indigo-800/60">
                 <Globe className="w-3 h-3" />
                 <span>Explaining in {language}</span>
-                <span className="text-amber-400 dark:text-amber-600">•</span>
+                <span className="text-indigo-300 dark:text-indigo-600">•</span>
                 <span>{simpleLanguage ? 'Simplified (ELI5)' : 'Standard'}</span>
               </div>
             </div>
@@ -538,14 +606,14 @@ export default function UnifiedMaterialInput({
                     }
                   }}
                   placeholder="https://www.youtube.com/watch?v=... or https://youtu.be/..."
-                  className="w-full rounded-xl px-3.5 py-2.5 text-xs bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-amber-500 pr-8 shadow-xs"
+                  className="w-full rounded-xl px-3.5 py-2.5 text-xs bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-700 text-[#1e1b24] dark:text-stone-100 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 pr-8 shadow-xs"
                 />
                 {videoUrl && (
                   <button
                     type="button"
                     onClick={() => setVideoUrl('')}
                     title="Clear video URL"
-                    className="absolute right-2.5 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 p-0.5 rounded-md"
+                    className="absolute right-2.5 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-600 dark:hover:text-stone-200 p-0.5 rounded-md"
                   >
                     <X className="w-3.5 h-3.5" />
                   </button>
@@ -557,7 +625,7 @@ export default function UnifiedMaterialInput({
                 id="explain-video-btn"
                 onClick={handleExplainVideo}
                 disabled={isProcessing || !videoUrl.trim()}
-                className="px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-white text-xs font-semibold shadow-xs disabled:opacity-50 transition-all flex items-center justify-center gap-1.5 focus-visible:ring-2 focus-visible:ring-amber-500 shrink-0 cursor-pointer disabled:cursor-not-allowed"
+                className="px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white text-xs font-semibold shadow-xs disabled:opacity-50 transition-all flex items-center justify-center gap-1.5 focus-visible:ring-2 focus-visible:ring-indigo-500 shrink-0 cursor-pointer disabled:cursor-not-allowed"
               >
                 {isProcessing ? (
                   <>
@@ -573,8 +641,8 @@ export default function UnifiedMaterialInput({
               </button>
             </div>
 
-            <div className="flex items-start gap-1.5 pt-0.5 text-[11px] text-zinc-500 dark:text-zinc-400 leading-relaxed">
-              <Info className="w-3.5 h-3.5 text-amber-500 shrink-0 mt-0.5" />
+            <div className="flex items-start gap-1.5 pt-0.5 text-[11px] text-stone-500 dark:text-stone-400 leading-relaxed">
+              <Info className="w-3.5 h-3.5 text-indigo-500 shrink-0 mt-0.5" />
               <span>
                 Gemini 3.5 Flash watches the video frames and listens to spoken audio directly on the free tier (up to 8 hrs/day). Generates timestamped milestones, core concepts, and takeaways directly into the workspace below for editing and quizzes.
               </span>
@@ -582,17 +650,17 @@ export default function UnifiedMaterialInput({
           </div>
 
           {/* Accessible Fallback: Subtitles & Transcripts */}
-          <div className="pt-3 border-t border-zinc-200 dark:border-zinc-800 space-y-2">
-            <label htmlFor="video-transcript-paste" className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 flex items-center justify-between">
+          <div className="pt-3 border-t border-stone-200/80 dark:border-stone-800 space-y-2">
+            <label htmlFor="video-transcript-paste" className="block text-xs font-semibold text-stone-700 dark:text-stone-300 flex items-center justify-between">
               <span className="flex items-center gap-1.5">
-                <FileText className="w-3.5 h-3.5 text-zinc-500" />
+                <FileText className="w-3.5 h-3.5 text-stone-500" />
                 <span>Paste Video Transcript or Captions (SRT / VTT)</span>
               </span>
-              <span className="text-[10px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded bg-zinc-200/70 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400">
+              <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-stone-200/70 dark:bg-stone-800 text-stone-600 dark:text-stone-400">
                 Accessible Fallback
               </span>
             </label>
-            <p className="text-[11px] text-zinc-500 dark:text-zinc-400">
+            <p className="text-[11px] text-stone-500 dark:text-stone-400">
               If the video is private, unlisted, restricted, or from Vimeo, copy the transcript (e.g. from YouTube &ldquo;Show Transcript&rdquo;) or paste subtitle text here.
             </p>
             <textarea
@@ -601,7 +669,7 @@ export default function UnifiedMaterialInput({
               value={videoTranscriptInput}
               onChange={(e) => setVideoTranscriptInput(e.target.value)}
               placeholder="Paste full video transcript or SRT/VTT subtitles here..."
-              className="w-full rounded-xl p-3 text-xs bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-amber-500 placeholder:text-zinc-400"
+              className="w-full rounded-xl p-3 text-xs bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-700 text-[#1e1b24] dark:text-stone-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 placeholder:text-stone-400"
             />
             {videoTranscriptInput.trim() && (
               <div className="flex justify-end">
@@ -610,7 +678,7 @@ export default function UnifiedMaterialInput({
                   id="load-transcript-btn"
                   onClick={handleLoadTranscript}
                   disabled={isProcessing}
-                  className="px-3.5 py-1.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 dark:bg-zinc-700 dark:hover:bg-zinc-600 text-white text-xs font-semibold shadow-xs transition-all inline-flex items-center gap-1.5 disabled:opacity-50"
+                  className="px-3.5 py-1.5 rounded-xl bg-stone-800 hover:bg-stone-700 dark:bg-stone-700 dark:hover:bg-stone-600 text-white text-xs font-semibold shadow-xs transition-all inline-flex items-center gap-1.5 disabled:opacity-50 cursor-pointer"
                 >
                   <FileText className="w-3.5 h-3.5" />
                   Load Transcript into Workspace
@@ -623,7 +691,7 @@ export default function UnifiedMaterialInput({
 
       {/* 4. AUDIO FILE TAB */}
       {activeTab === 'audio' && (
-        <div className="p-5 rounded-2xl border-2 border-dashed border-amber-200 dark:border-zinc-700 bg-amber-50/30 dark:bg-zinc-950/40 text-center space-y-3">
+        <div className="p-6 rounded-3xl border-2 border-dashed border-indigo-200/80 hover:border-indigo-400 dark:border-stone-700/80 bg-indigo-50/20 dark:bg-stone-900/40 text-center space-y-3 transition-colors">
           <input
             ref={audioInputRef}
             type="file"
@@ -632,12 +700,12 @@ export default function UnifiedMaterialInput({
             className="hidden"
             id="audio-file-upload"
           />
-          <div className="mx-auto w-10 h-10 rounded-full bg-amber-100 dark:bg-amber-950/70 text-amber-800 dark:text-amber-300 flex items-center justify-center">
+          <div className="mx-auto w-11 h-11 rounded-2xl bg-indigo-100/70 dark:bg-indigo-950/70 text-indigo-700 dark:text-indigo-300 flex items-center justify-center shadow-xs">
             <Mic className="w-5 h-5" />
           </div>
           <div>
-            <h4 className="text-sm font-bold text-zinc-900 dark:text-zinc-100">Upload Lecture Audio / Video</h4>
-            <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">
+            <h4 className="text-sm font-bold text-stone-900 dark:text-stone-100">Upload Lecture Audio / Video</h4>
+            <p className="text-xs text-stone-500 dark:text-stone-400 mt-0.5 max-w-md mx-auto">
               Transcribes lecture clips automatically using Google&apos;s Gemini 3.5 Transcribe model (WAV, MP3, M4A, WebM up to 15MB). You can also paste transcripts directly.
             </p>
           </div>
@@ -645,7 +713,7 @@ export default function UnifiedMaterialInput({
             type="button"
             onClick={() => audioInputRef.current?.click()}
             disabled={isProcessing}
-            className="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-semibold text-xs shadow-sm transition-all inline-flex items-center gap-1.5 focus-visible:ring-2 focus-visible:ring-amber-500 disabled:opacity-50"
+            className="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs shadow-xs transition-all inline-flex items-center gap-1.5 focus-visible:ring-2 focus-visible:ring-indigo-500 disabled:opacity-50 cursor-pointer"
           >
             <Upload className="w-3.5 h-3.5" />
             Choose Audio File
@@ -653,24 +721,24 @@ export default function UnifiedMaterialInput({
         </div>
       )}
 
-      {/* EXTRACTED METADATA / SOURCE BADGE */}
+      {/* EXTRACTED METADATA / SOURCE BADGE (Muted Sage Green) */}
       {extractedMeta && (
-        <div className="p-3 rounded-2xl bg-amber-50/80 dark:bg-amber-950/30 border border-amber-200/80 dark:border-amber-800/60 flex items-start justify-between gap-3 text-xs">
+        <div className="p-3.5 rounded-2xl bg-emerald-50/80 dark:bg-emerald-950/30 border border-emerald-200/80 dark:border-emerald-800/60 flex items-start justify-between gap-3 text-xs">
           <div className="flex items-start gap-2.5">
-            <span className="p-1 rounded-lg bg-amber-200/70 dark:bg-amber-900 text-amber-900 dark:text-amber-100 shrink-0">
+            <span className="p-1.5 rounded-lg bg-emerald-200/70 dark:bg-emerald-900 text-emerald-900 dark:text-emerald-100 shrink-0">
               <CheckCircle2 className="w-3.5 h-3.5" />
             </span>
             <div>
-              <div className="font-semibold text-amber-950 dark:text-amber-100 flex items-center gap-1.5">
+              <div className="font-semibold text-emerald-950 dark:text-emerald-100 flex items-center gap-1.5">
                 <span>Loaded from {extractedMeta.sourceType.toUpperCase()}:</span>
-                <span className="font-mono text-zinc-700 dark:text-zinc-300 truncate max-w-xs">{extractedMeta.sourceName}</span>
+                <span className="font-mono text-stone-700 dark:text-stone-300 truncate max-w-xs">{extractedMeta.sourceName}</span>
                 {extractedMeta.pageCount && (
-                  <span className="px-1.5 py-0.2 rounded-md bg-amber-200/60 dark:bg-amber-900 text-[10px]">
+                  <span className="px-1.5 py-0.2 rounded-md bg-emerald-200/60 dark:bg-emerald-900 text-[10px]">
                     {extractedMeta.pageCount} page{extractedMeta.pageCount > 1 ? 's' : ''}
                   </span>
                 )}
               </div>
-              <p className="text-amber-800 dark:text-amber-300/90 text-[11px] mt-0.5">
+              <p className="text-emerald-800 dark:text-emerald-300/90 text-[11px] mt-0.5">
                 {extractedMeta.warning || 'You can review and edit the extracted content below before generating explanations or quizzes.'}
               </p>
             </div>
@@ -679,7 +747,7 @@ export default function UnifiedMaterialInput({
           <button
             type="button"
             onClick={handleClear}
-            className="p-1 rounded-lg hover:bg-amber-200/70 dark:hover:bg-amber-900 text-amber-800 dark:text-amber-300"
+            className="p-1 rounded-lg hover:bg-emerald-200/70 dark:hover:bg-emerald-900 text-emerald-800 dark:text-emerald-300 cursor-pointer"
             title="Clear and reset input"
             aria-label="Clear extracted content"
           >
@@ -699,15 +767,15 @@ export default function UnifiedMaterialInput({
           value={material}
           onChange={(e) => onMaterialChange(e.target.value)}
           placeholder="Paste lecture notes, or upload a PDF document, image diagram, or video transcript above..."
-          className="w-full rounded-2xl p-4 text-sm bg-zinc-50/80 dark:bg-zinc-950/80 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-amber-500 resize-y transition-all font-sans leading-relaxed"
+          className="w-full rounded-2xl p-4 text-sm bg-white dark:bg-stone-900/90 border border-stone-200 dark:border-stone-700/80 text-[#1e1b24] dark:text-stone-100 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-y transition-all font-sans leading-relaxed shadow-xs"
           aria-label="Study material content"
         />
 
-        <div className="flex items-center justify-between mt-2 px-1 text-xs text-zinc-500 dark:text-zinc-400">
+        <div className="flex items-center justify-between mt-2 px-1 text-xs text-stone-500 dark:text-stone-400">
           <div className="flex items-center gap-2">
             <span>{material.length} characters</span>
             {material.length > 15000 && (
-              <span className="text-amber-600 dark:text-amber-400 text-[11px] flex items-center gap-1">
+              <span className="text-indigo-600 dark:text-indigo-400 text-[11px] flex items-center gap-1">
                 <Info className="w-3 h-3" />
                 Long document: Gemma will synthesize core concepts safely.
               </span>
@@ -717,7 +785,7 @@ export default function UnifiedMaterialInput({
             <button
               type="button"
               onClick={handleClear}
-              className="text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200 transition-colors"
+              className="text-stone-500 hover:text-stone-800 dark:hover:text-stone-200 transition-colors cursor-pointer"
             >
               Clear text
             </button>

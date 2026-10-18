@@ -113,14 +113,14 @@ export default function VoiceQuestionInput({
       <div className="flex items-center justify-between">
         <label
           htmlFor={id}
-          className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 flex items-center gap-1.5"
+          className="block text-xs font-semibold text-stone-700 dark:text-stone-300 flex items-center gap-1.5"
         >
-          <Sparkles className="w-3.5 h-3.5 text-amber-500" aria-hidden="true" />
+          <Sparkles className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" aria-hidden="true" />
           <span>Specific Question or Focus Area (Optional)</span>
         </label>
 
         {isSupported && (
-          <span className="text-[11px] text-zinc-500 dark:text-zinc-400 hidden sm:inline">
+          <span className="text-[11px] text-stone-500 dark:text-stone-400 hidden sm:inline">
             Voice input supported ({language})
           </span>
         )}
@@ -133,7 +133,7 @@ export default function VoiceQuestionInput({
           value={value}
           onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder}
-          className="w-full rounded-xl pl-3.5 pr-12 py-2.5 text-sm bg-zinc-50/80 dark:bg-zinc-950/80 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all font-sans"
+          className="w-full rounded-2xl pl-3.5 pr-12 py-2.5 text-sm bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-700/80 text-[#1e1b24] dark:text-stone-100 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all font-sans shadow-xs"
         />
 
         {/* Microphone Button */}
@@ -141,10 +141,10 @@ export default function VoiceQuestionInput({
           <button
             type="button"
             onClick={toggleListening}
-            className={`absolute right-2 p-1.5 rounded-lg transition-all focus-visible:ring-2 focus-visible:ring-amber-500 focus:outline-none ${
+            className={`absolute right-2 p-1.5 rounded-xl transition-all focus-visible:ring-2 focus-visible:ring-indigo-500 focus:outline-none cursor-pointer ${
               isListening
                 ? 'bg-rose-500 text-white animate-pulse shadow-md shadow-rose-500/30'
-                : 'text-zinc-500 hover:text-amber-600 dark:text-zinc-400 dark:hover:text-amber-400 hover:bg-zinc-200/60 dark:hover:bg-zinc-800'
+                : 'text-stone-500 hover:text-indigo-600 dark:text-stone-400 dark:hover:text-indigo-400 hover:bg-stone-100 dark:hover:bg-stone-800'
             }`}
             aria-label={isListening ? 'Stop listening' : `Ask question using voice in ${language}`}
             aria-pressed={isListening}
@@ -162,13 +162,13 @@ export default function VoiceQuestionInput({
       {/* Screen Reader and Visual Voice Status Announcement */}
       <div aria-live="polite" className="text-xs">
         {isListening && (
-          <p className="text-amber-700 dark:text-amber-300 font-medium flex items-center gap-1.5 pt-0.5">
+          <p className="text-indigo-700 dark:text-indigo-300 font-medium flex items-center gap-1.5 pt-0.5">
             <span className="w-2 h-2 rounded-full bg-rose-500 animate-ping" />
             {statusMessage}
           </p>
         )}
         {!isListening && statusMessage && (
-          <p className="text-zinc-500 dark:text-zinc-400 text-[11px] pt-0.5">{statusMessage}</p>
+          <p className="text-stone-500 dark:text-stone-400 text-[11px] pt-0.5">{statusMessage}</p>
         )}
         {speechError && (
           <p className="text-rose-600 dark:text-rose-400 font-medium flex items-center gap-1 pt-0.5">

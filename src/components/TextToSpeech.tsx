@@ -137,35 +137,35 @@ export default function TextToSpeech({ text, language = 'English', label = 'Read
 
   return (
     <div
-      className="inline-flex items-center gap-2 bg-amber-50/80 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/60 rounded-full px-3 py-1.5 text-xs font-medium text-amber-900 dark:text-amber-200 shadow-sm"
+      className="inline-flex items-center gap-2 bg-indigo-50/80 dark:bg-indigo-950/40 border border-indigo-200/80 dark:border-indigo-800/60 rounded-full px-3 py-1.5 text-xs font-medium text-indigo-900 dark:text-indigo-200 shadow-xs"
       role="region"
       aria-label="Speech synthesizer controls"
     >
       <span className="flex items-center gap-1.5">
-        <Volume2 className="w-3.5 h-3.5 text-amber-700 dark:text-amber-300" aria-hidden="true" />
+        <Volume2 className="w-3.5 h-3.5 text-indigo-700 dark:text-indigo-300" aria-hidden="true" />
         <span className="hidden sm:inline">{label}</span>
       </span>
 
-      <div className="flex items-center gap-1 ml-1 border-l border-amber-300 dark:border-amber-800 pl-2">
+      <div className="flex items-center gap-1 ml-1 border-l border-indigo-200 dark:border-indigo-800 pl-2">
         {!isPlaying ? (
           <button
             type="button"
             onClick={handlePlay}
-            className="p-1 rounded-full hover:bg-amber-200/70 dark:hover:bg-amber-800/80 transition-colors focus-visible:ring-2 focus-visible:ring-amber-500 focus:outline-none"
+            className="p-1 rounded-full hover:bg-indigo-200/70 dark:hover:bg-indigo-800/80 transition-colors focus-visible:ring-2 focus-visible:ring-indigo-500 focus:outline-none cursor-pointer"
             aria-label={isPaused ? 'Resume speaking' : 'Play reading aloud'}
             title={isPaused ? 'Resume reading' : 'Read aloud'}
           >
-            <Play className="w-3.5 h-3.5 text-amber-900 dark:text-amber-100 fill-current" />
+            <Play className="w-3.5 h-3.5 text-indigo-900 dark:text-indigo-100 fill-current" />
           </button>
         ) : (
           <button
             type="button"
             onClick={handlePause}
-            className="p-1 rounded-full hover:bg-amber-200/70 dark:hover:bg-amber-800/80 transition-colors focus-visible:ring-2 focus-visible:ring-amber-500 focus:outline-none"
+            className="p-1 rounded-full hover:bg-indigo-200/70 dark:hover:bg-indigo-800/80 transition-colors focus-visible:ring-2 focus-visible:ring-indigo-500 focus:outline-none cursor-pointer"
             aria-label="Pause speaking"
             title="Pause"
           >
-            <Pause className="w-3.5 h-3.5 text-amber-900 dark:text-amber-100 fill-current" />
+            <Pause className="w-3.5 h-3.5 text-indigo-900 dark:text-indigo-100 fill-current" />
           </button>
         )}
 
@@ -173,18 +173,18 @@ export default function TextToSpeech({ text, language = 'English', label = 'Read
           <button
             type="button"
             onClick={handleStop}
-            className="p-1 rounded-full hover:bg-amber-200/70 dark:hover:bg-amber-800/80 transition-colors focus-visible:ring-2 focus-visible:ring-amber-500 focus:outline-none"
+            className="p-1 rounded-full hover:bg-indigo-200/70 dark:hover:bg-indigo-800/80 transition-colors focus-visible:ring-2 focus-visible:ring-indigo-500 focus:outline-none cursor-pointer"
             aria-label="Stop speaking"
             title="Stop reading"
           >
-            <VolumeX className="w-3.5 h-3.5 text-amber-900 dark:text-amber-100" />
+            <VolumeX className="w-3.5 h-3.5 text-indigo-900 dark:text-indigo-100" />
           </button>
         )}
 
         <button
           type="button"
           onClick={toggleRate}
-          className="px-1.5 py-0.5 rounded text-[11px] font-mono bg-amber-100/90 dark:bg-amber-900/60 hover:bg-amber-200 dark:hover:bg-amber-800 transition-colors focus-visible:ring-2 focus-visible:ring-amber-500 focus:outline-none"
+          className="px-1.5 py-0.5 rounded text-[11px] font-mono bg-indigo-100/90 dark:bg-indigo-900/60 hover:bg-indigo-200 dark:hover:bg-indigo-800 transition-colors focus-visible:ring-2 focus-visible:ring-indigo-500 focus:outline-none cursor-pointer"
           aria-label={`Change reading speed, current ${rate}x`}
           title="Toggle speed (0.8x, 1x, 1.25x)"
         >
@@ -193,9 +193,9 @@ export default function TextToSpeech({ text, language = 'English', label = 'Read
 
         {isPlaying && (
           <span className="flex items-center gap-0.5 px-1" aria-hidden="true">
-            <span className="w-1 h-2.5 bg-amber-500 rounded-full animate-pulse" />
-            <span className="w-1 h-3.5 bg-amber-600 rounded-full animate-pulse delay-75" />
-            <span className="w-1 h-2 bg-amber-500 rounded-full animate-pulse delay-150" />
+            <span className="w-1 h-2.5 bg-indigo-500 rounded-full animate-pulse" />
+            <span className="w-1 h-3.5 bg-indigo-600 rounded-full animate-pulse delay-75" />
+            <span className="w-1 h-2 bg-indigo-500 rounded-full animate-pulse delay-150" />
           </span>
         )}
       </div>

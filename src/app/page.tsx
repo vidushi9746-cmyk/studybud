@@ -361,9 +361,9 @@ export default function StudyBudHome() {
 
   if (!isClient) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#faf8f5]">
-        <div className="flex items-center gap-3 text-amber-900 font-medium">
-          <span className="w-5 h-5 border-2 border-amber-600 border-t-transparent rounded-full animate-spin" />
+      <div className="min-h-screen flex items-center justify-center bg-[#faf7f2] dark:bg-[#151319]">
+        <div className="flex items-center gap-3 text-stone-800 dark:text-stone-200 font-medium">
+          <span className="w-5 h-5 border-2 border-indigo-600 border-t-transparent rounded-full animate-spin" />
           Loading StudyBud...
         </div>
       </div>
@@ -380,16 +380,32 @@ export default function StudyBudHome() {
       />
 
       <main className="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-8">
+        {/* Welcoming Hero Header */}
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-2">
+          <div>
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border border-indigo-200/70 dark:border-indigo-800/60 mb-2.5 shadow-2xs">
+              <Sparkles className="w-3.5 h-3.5 text-indigo-500" />
+              <span>Adaptive Study Companion • Powered by Google Gemma 4</span>
+            </div>
+            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-stone-900 dark:text-stone-100">
+              Master Any Subject, Step by Step
+            </h1>
+            <p className="text-sm text-stone-600 dark:text-stone-400 mt-1 max-w-xl">
+              Turn lecture slides, textbook notes, diagrams, videos, and audio into grounded explanations, interactive quizzes, and adaptive revision.
+            </p>
+          </div>
+        </div>
+
         {/* Navigation Tabs */}
-        <div className="flex items-center justify-between border-b border-zinc-200 dark:border-zinc-800 pb-3">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-stone-200/80 dark:border-stone-800 pb-3">
           <nav className="flex items-center gap-2" aria-label="StudyBud main navigation">
             <button
               type="button"
               onClick={() => setActiveTab('workspace')}
-              className={`px-4 py-2 rounded-2xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-2 ${
+              className={`px-4 py-2 rounded-2xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-2 cursor-pointer ${
                 activeTab === 'workspace'
-                  ? 'bg-amber-500 text-white shadow-sm shadow-amber-500/20'
-                  : 'text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800'
+                  ? 'bg-indigo-600 text-white shadow-sm shadow-indigo-500/20'
+                  : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 hover:bg-stone-100 dark:hover:bg-stone-800'
               }`}
             >
               <BookOpen className="w-4 h-4" />
@@ -399,46 +415,27 @@ export default function StudyBudHome() {
             <button
               type="button"
               onClick={() => setActiveTab('progress')}
-              className={`px-4 py-2 rounded-2xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-2 ${
+              className={`px-4 py-2 rounded-2xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-2 cursor-pointer ${
                 activeTab === 'progress'
-                  ? 'bg-amber-500 text-white shadow-sm shadow-amber-500/20'
-                  : 'text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800'
+                  ? 'bg-indigo-600 text-white shadow-sm shadow-indigo-500/20'
+                  : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 hover:bg-stone-100 dark:hover:bg-stone-800'
               }`}
             >
               <History className="w-4 h-4" />
               Learning Progress & History
               {weakConcepts.length > 0 && (
-                <span className="px-1.5 py-0.2 rounded-full text-[10px] bg-amber-600 text-white">
+                <span className="px-1.5 py-0.2 rounded-full text-[10px] font-bold bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200">
                   {weakConcepts.length}
                 </span>
               )}
             </button>
           </nav>
-
-          {/* Quick sample lesson trigger */}
-          <div className="hidden sm:flex items-center gap-2">
-            <span className="text-xs text-zinc-500 font-medium">Try Sample:</span>
-            <button
-              type="button"
-              onClick={() => handleLoadSample('photosynthesis')}
-              className="px-2.5 py-1 rounded-xl text-xs font-medium bg-amber-100/70 hover:bg-amber-200/80 text-amber-900 dark:bg-amber-950/60 dark:text-amber-300 border border-amber-300/50 transition-colors"
-            >
-              🌿 Photosynthesis
-            </button>
-            <button
-              type="button"
-              onClick={() => handleLoadSample('newton-laws')}
-              className="px-2.5 py-1 rounded-xl text-xs font-medium bg-zinc-100 hover:bg-zinc-200 text-zinc-800 dark:bg-zinc-800 dark:text-zinc-200 border border-zinc-300/50 transition-colors"
-            >
-              🍎 Newton&apos;s Laws
-            </button>
-          </div>
         </div>
 
         {/* Global Error Banner */}
         {apiError && (
           <div
-            className="p-4 rounded-2xl bg-rose-50 dark:bg-rose-950/40 border border-rose-300 dark:border-rose-800 text-rose-900 dark:text-rose-200 text-sm flex items-start gap-3 shadow-sm"
+            className="p-4 rounded-2xl bg-rose-50 dark:bg-rose-950/40 border border-rose-300 dark:border-rose-800 text-rose-900 dark:text-rose-200 text-sm flex items-start gap-3 shadow-xs"
             role="alert"
           >
             <AlertTriangle className="w-5 h-5 text-rose-600 dark:text-rose-400 shrink-0 mt-0.5" />
@@ -449,7 +446,7 @@ export default function StudyBudHome() {
             <button
               type="button"
               onClick={() => setApiError(null)}
-              className="text-xs font-semibold px-2 py-1 rounded-lg hover:bg-rose-100 dark:hover:bg-rose-900"
+              className="text-xs font-semibold px-2 py-1 rounded-lg hover:bg-rose-100 dark:hover:bg-rose-900 cursor-pointer"
             >
               Dismiss
             </button>
@@ -467,257 +464,507 @@ export default function StudyBudHome() {
           />
         ) : (
           <div className="space-y-8">
-            {/* 1. INPUT WORKSPACE CARD */}
-            <section
-              className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-3xl p-5 sm:p-7 shadow-sm transition-all"
-              aria-labelledby="workspace-heading"
-            >
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+            {/* PROMINENT SAMPLE LESSONS STARTER DECK */}
+            <section aria-labelledby="sample-lessons-heading" className="space-y-3">
+              <div className="flex items-center justify-between">
                 <div>
                   <h2
-                    id="workspace-heading"
-                    className="text-lg font-bold text-zinc-900 dark:text-zinc-100 flex items-center gap-2"
+                    id="sample-lessons-heading"
+                    className="text-sm font-bold text-stone-900 dark:text-stone-100 flex items-center gap-1.5"
                   >
-                    <FileText className="w-5 h-5 text-amber-500" />
-                    Enter Study Material
+                    <Sparkles className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+                    Quick Start with Sample Lessons
                   </h2>
-                  <p className="text-xs text-zinc-600 dark:text-zinc-400 mt-0.5">
-                    Paste lecture notes, textbook chapters, or an article. StudyBud explains concepts and personalizes based on your history.
+                  <p className="text-xs text-stone-500 dark:text-stone-400">
+                    Explore StudyBud immediately using curated curriculum lessons.
                   </p>
                 </div>
+              </div>
 
-                {/* Mobile sample buttons */}
-                <div className="flex sm:hidden items-center gap-1.5 self-start">
-                  <span className="text-[11px] text-zinc-500">Sample:</span>
-                  <button
-                    type="button"
-                    onClick={() => handleLoadSample('photosynthesis')}
-                    className="px-2 py-0.5 rounded-lg text-[11px] font-medium bg-amber-100 text-amber-900"
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {SAMPLE_LESSONS.map((sample) => (
+                  <div
+                    key={sample.id}
+                    className="group relative flex flex-col justify-between p-5 rounded-3xl bg-white/90 dark:bg-stone-900/90 border border-stone-200/90 dark:border-stone-800 hover:border-indigo-400 dark:hover:border-indigo-600/60 shadow-xs hover:shadow-md transition-all"
                   >
-                    🌿 Photosynthesis
-                  </button>
-                </div>
-              </div>
+                    <div>
+                      <div className="flex items-center justify-between gap-2 mb-2">
+                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-emerald-50 dark:bg-emerald-950/50 text-emerald-800 dark:text-emerald-300 border border-emerald-200/70 dark:border-emerald-800/70 shadow-2xs">
+                          <span>{sample.emoji}</span>
+                          <span>{sample.subject}</span>
+                        </span>
+                        <span className="text-[11px] text-stone-400 font-mono">Sample Deck</span>
+                      </div>
+                      <h3 className="text-base font-bold text-stone-900 dark:text-stone-100 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+                        {sample.title}
+                      </h3>
+                      <p className="text-xs text-stone-600 dark:text-stone-400 mt-1.5 leading-relaxed">
+                        {sample.summary}
+                      </p>
+                    </div>
 
-              {/* Multimodal Unified Material Input */}
-              <UnifiedMaterialInput
-                material={material}
-                onMaterialChange={setMaterial}
-                extractedMeta={extractedMeta}
-                onExtractedMetaChange={setExtractedMeta}
-                onLoadSample={handleLoadSample}
-                language={language}
-                simpleLanguage={simpleLanguage}
-              />
-
-              {/* Voice Question Input */}
-              <div className="pt-1">
-                <VoiceQuestionInput
-                  value={question}
-                  onChange={setQuestion}
-                  language={language}
-                  id="study-question-input"
-                  placeholder="e.g. What is the difference between light reactions and the Calvin cycle?"
-                />
-              </div>
-
-              {/* Study Preferences Bar (Language & Simple-Language Toggle) */}
-              <div className="mt-5 pt-4 border-t border-zinc-200/80 dark:border-zinc-800 flex flex-wrap items-center justify-between gap-4">
-                <div className="flex flex-wrap items-center gap-4">
-                  {/* Language Selector */}
-                  <div className="flex items-center gap-2">
-                    <Globe className="w-4 h-4 text-zinc-500" />
-                    <label htmlFor="language-select" className="text-xs font-medium text-zinc-600 dark:text-zinc-400">
-                      Language:
-                    </label>
-                    <select
-                      id="language-select"
-                      value={language}
-                      onChange={(e) => {
-                        const newLang = e.target.value as SupportedLanguage;
-                        setLanguage(newLang);
-                        handleUpdatePreferences({ language: newLang });
-                      }}
-                      className="text-xs font-semibold rounded-xl px-2.5 py-1.5 bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-zinc-800 dark:text-zinc-200 focus:outline-none focus:ring-2 focus:ring-amber-500"
-                    >
-                      <option value="English">English</option>
-                      <option value="Hindi">हिन्दी (Hindi)</option>
-                      <option value="Kannada">ಕನ್ನಡ (Kannada)</option>
-                      <option value="Hinglish">Hinglish (Hindi-English blend)</option>
-                    </select>
+                    <div className="mt-4 pt-3 border-t border-stone-100 dark:border-stone-800/80 flex items-center justify-between gap-2">
+                      <span className="text-[11px] text-stone-500 dark:text-stone-400 truncate max-w-[210px] sm:max-w-xs">
+                        Focus: {sample.suggestedQuestion}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => handleLoadSample(sample.id)}
+                        className="px-3.5 py-1.5 rounded-xl bg-indigo-50 hover:bg-indigo-600 text-indigo-700 hover:text-white dark:bg-indigo-950/60 dark:hover:bg-indigo-600 dark:text-indigo-300 dark:hover:text-white text-xs font-semibold transition-all inline-flex items-center gap-1.5 shrink-0 shadow-2xs cursor-pointer"
+                      >
+                        <span>Study Lesson</span>
+                        <ArrowRight className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
                   </div>
-
-                  {/* Simple Language Toggle (ELI5) */}
-                  <label className="flex items-center gap-2 cursor-pointer select-none">
-                    <input
-                      type="checkbox"
-                      checked={simpleLanguage}
-                      onChange={(e) => {
-                        const val = e.target.checked;
-                        setSimpleLanguage(val);
-                        handleUpdatePreferences({ simpleLanguage: val });
-                      }}
-                      className="w-4 h-4 rounded text-amber-500 focus:ring-amber-400 border-zinc-300 dark:border-zinc-700"
-                    />
-                    <span className="text-xs font-medium text-zinc-700 dark:text-zinc-300 flex items-center gap-1">
-                      <Lightbulb className="w-3.5 h-3.5 text-amber-500" />
-                      Simple Explanations (ELI5 Mode)
-                    </span>
-                  </label>
-                </div>
-
-                {/* Action Buttons: Explain & Generate Quiz */}
-                <div className="flex items-center gap-2.5 w-full sm:w-auto justify-end">
-                  <button
-                    type="button"
-                    onClick={handleGenerateQuiz}
-                    disabled={isGeneratingQuiz || isExplaining || !material.trim()}
-                    className="px-4 py-2.5 rounded-2xl border border-zinc-300 dark:border-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-800 dark:text-zinc-200 font-semibold text-xs transition-all flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed focus-visible:ring-2 focus-visible:ring-amber-500"
-                  >
-                    {isGeneratingQuiz ? (
-                      <>
-                        <span className="w-3.5 h-3.5 border-2 border-zinc-400 border-t-transparent rounded-full animate-spin" />
-                        Generating Quiz...
-                      </>
-                    ) : (
-                      <>
-                        <HelpCircle className="w-3.5 h-3.5 text-amber-500" />
-                        Generate Quiz
-                      </>
-                    )}
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={handleExplain}
-                    disabled={isExplaining || isGeneratingQuiz || !material.trim()}
-                    className="px-5 py-2.5 rounded-2xl bg-amber-500 hover:bg-amber-600 active:scale-95 text-white font-semibold text-xs shadow-md shadow-amber-500/20 transition-all flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed focus-visible:ring-2 focus-visible:ring-amber-500"
-                  >
-                    {isExplaining ? (
-                      <>
-                        <span className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                        Gemma 4 is Thinking...
-                      </>
-                    ) : (
-                      <>
-                        <Sparkles className="w-3.5 h-3.5" />
-                        Explain Material
-                      </>
-                    )}
-                  </button>
-                </div>
+                ))}
               </div>
             </section>
 
-            {/* 2. EXPLANATION PANEL */}
-            {explanation && (
-              <section
-                ref={explanationRef}
-                className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-3xl p-5 sm:p-7 shadow-sm transition-all space-y-4"
-                aria-labelledby="explanation-heading"
-              >
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-zinc-200 dark:border-zinc-800">
-                  <div className="flex items-center gap-2">
-                    <span className="p-1.5 rounded-xl bg-amber-500 text-white shadow-sm shadow-amber-500/30">
-                      <Sparkles className="w-4 h-4" />
-                    </span>
+            {/* RESPONSIVE 8+4 WORKSPACE DASHBOARD */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+              {/* LEFT / MAIN WORKSPACE COLUMN (8 COLS) */}
+              <div className="lg:col-span-8 space-y-6">
+                {/* 1. INPUT WORKSPACE CARD */}
+                <section
+                  className="bg-white dark:bg-stone-900/90 border border-stone-200/80 dark:border-stone-800 rounded-3xl p-5 sm:p-7 shadow-xs transition-all space-y-5"
+                  aria-labelledby="workspace-heading"
+                >
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                     <div>
-                      <h3
-                        id="explanation-heading"
-                        className="text-lg font-bold text-zinc-900 dark:text-zinc-100"
+                      <h2
+                        id="workspace-heading"
+                        className="text-lg font-bold text-stone-900 dark:text-stone-100 flex items-center gap-2"
                       >
-                        Gemma 4 Explanation
-                      </h3>
-                      <span className="text-xs text-zinc-500 dark:text-zinc-400">
-                        Language: {language} {simpleLanguage ? '• Simplified Mode' : ''}
-                      </span>
+                        <FileText className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
+                        Study Material Station
+                      </h2>
+                      <p className="text-xs text-stone-600 dark:text-stone-400 mt-0.5">
+                        Select a source format below to import or write your study notes.
+                      </p>
                     </div>
                   </div>
 
-                  {/* Browser Text-to-Speech Player */}
-                  <TextToSpeech text={explanation} language={language} label="Read Aloud" />
+                  {/* Multimodal Unified Material Input */}
+                  <UnifiedMaterialInput
+                    material={material}
+                    onMaterialChange={setMaterial}
+                    extractedMeta={extractedMeta}
+                    onExtractedMetaChange={setExtractedMeta}
+                    onLoadSample={handleLoadSample}
+                    language={language}
+                    simpleLanguage={simpleLanguage}
+                  />
+
+                  {/* Voice Question Input */}
+                  <div className="pt-2 border-t border-stone-200/80 dark:border-stone-800">
+                    <VoiceQuestionInput
+                      value={question}
+                      onChange={setQuestion}
+                      language={language}
+                      id="study-question-input"
+                      placeholder="e.g. What is the difference between light reactions and the Calvin cycle?"
+                    />
+                  </div>
+
+                  {/* Study Preferences & Action Command Center */}
+                  <div className="pt-4 border-t border-stone-200/80 dark:border-stone-800 flex flex-wrap items-center justify-between gap-4">
+                    <div className="flex flex-wrap items-center gap-4">
+                      {/* Language Selector */}
+                      <div className="flex items-center gap-2">
+                        <Globe className="w-4 h-4 text-stone-600 dark:text-stone-400" />
+                        <label htmlFor="language-select" className="text-xs font-semibold text-stone-700 dark:text-stone-300">
+                          Language:
+                        </label>
+                        <select
+                          id="language-select"
+                          value={language}
+                          onChange={(e) => {
+                            const newLang = e.target.value as SupportedLanguage;
+                            setLanguage(newLang);
+                            handleUpdatePreferences({ language: newLang });
+                          }}
+                          className="text-xs font-semibold rounded-xl px-3 py-1.5 bg-white dark:bg-stone-800 border border-stone-300 dark:border-stone-700 text-[#1e1b24] dark:text-stone-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer shadow-2xs"
+                        >
+                          <option value="English" className="bg-white dark:bg-stone-900 text-[#1e1b24] dark:text-stone-100">English</option>
+                          <option value="Hindi" className="bg-white dark:bg-stone-900 text-[#1e1b24] dark:text-stone-100">हिन्दी (Hindi)</option>
+                          <option value="Kannada" className="bg-white dark:bg-stone-900 text-[#1e1b24] dark:text-stone-100">ಕನ್ನಡ (Kannada)</option>
+                          <option value="Hinglish" className="bg-white dark:bg-stone-900 text-[#1e1b24] dark:text-stone-100">Hinglish (Hindi-English blend)</option>
+                        </select>
+                      </div>
+
+                      {/* Simple Language Toggle (ELI5) */}
+                      <label className="flex items-center gap-2 cursor-pointer select-none">
+                        <input
+                          type="checkbox"
+                          checked={simpleLanguage}
+                          onChange={(e) => {
+                            const val = e.target.checked;
+                            setSimpleLanguage(val);
+                            handleUpdatePreferences({ simpleLanguage: val });
+                          }}
+                          className="w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500 border-stone-300 dark:border-stone-700"
+                        />
+                        <span className="text-xs font-medium text-stone-700 dark:text-stone-300 flex items-center gap-1.5">
+                          <Lightbulb className="w-3.5 h-3.5 text-indigo-500" />
+                          Simple Explanations (ELI5 Mode)
+                        </span>
+                      </label>
+                    </div>
+
+                    {/* Action Buttons: Explain & Generate Quiz */}
+                    <div className="flex items-center gap-2.5 w-full sm:w-auto justify-end">
+                      <button
+                        type="button"
+                        onClick={handleGenerateQuiz}
+                        disabled={isGeneratingQuiz || isExplaining || !material.trim()}
+                        className="px-4 py-2.5 rounded-2xl border border-stone-300/90 dark:border-stone-700 hover:bg-stone-50 dark:hover:bg-stone-800 text-stone-800 dark:text-stone-200 font-semibold text-xs transition-all flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-xs cursor-pointer"
+                      >
+                        {isGeneratingQuiz ? (
+                          <>
+                            <span className="w-3.5 h-3.5 border-2 border-stone-400 border-t-transparent rounded-full animate-spin" />
+                            Generating Quiz...
+                          </>
+                        ) : (
+                          <>
+                            <HelpCircle className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
+                            Generate Quiz
+                          </>
+                        )}
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={handleExplain}
+                        disabled={isExplaining || isGeneratingQuiz || !material.trim()}
+                        className="px-5 py-2.5 rounded-2xl bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white font-semibold text-xs shadow-md shadow-indigo-500/20 transition-all flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                      >
+                        {isExplaining ? (
+                          <>
+                            <span className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                            Gemma 4 is Thinking...
+                          </>
+                        ) : (
+                          <>
+                            <Sparkles className="w-3.5 h-3.5" />
+                            Explain Material
+                          </>
+                        )}
+                      </button>
+                    </div>
+                  </div>
+                </section>
+              </div>
+
+              {/* RIGHT / SIDEBAR COMPANION COLUMN (4 COLS) */}
+              <aside className="lg:col-span-4 space-y-5" aria-label="Study Session Companion">
+                {/* 1. ACTUAL SESSION WORKFLOW STEPPER */}
+                <div className="p-5 rounded-3xl bg-white/90 dark:bg-stone-900/90 border border-stone-200/80 dark:border-stone-800 shadow-xs space-y-4">
+                  <div className="flex items-center justify-between pb-3 border-b border-stone-100 dark:border-stone-800">
+                    <h3 className="text-xs font-bold uppercase tracking-wider text-stone-500 dark:text-stone-400">
+                      Study Session Stepper
+                    </h3>
+                    <span className="text-[11px] font-mono text-indigo-600 dark:text-indigo-400 font-semibold">
+                      Live State
+                    </span>
+                  </div>
+
+                  <ol className="space-y-3.5 text-xs">
+                    {/* Step 1: Material Ingestion */}
+                    <li className="flex items-start gap-3">
+                      <div
+                        className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold shrink-0 mt-0.5 ${
+                          material.trim().length > 0
+                            ? 'bg-emerald-600 text-white'
+                            : 'bg-stone-100 text-stone-500 dark:bg-stone-800 dark:text-stone-400'
+                        }`}
+                      >
+                        {material.trim().length > 0 ? '✓' : '1'}
+                      </div>
+                      <div className="flex-1">
+                        <span className="font-semibold text-stone-900 dark:text-stone-100 block">
+                          1. Ingest Material
+                        </span>
+                        <span className="text-stone-500 dark:text-stone-400 text-[11px]">
+                          {material.trim().length > 0
+                            ? `${material.length} characters loaded`
+                            : 'Awaiting notes, PDF, image, or video'}
+                        </span>
+                      </div>
+                    </li>
+
+                    {/* Step 2: Conceptual Explanation */}
+                    <li className="flex items-start gap-3">
+                      <div
+                        className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold shrink-0 mt-0.5 ${
+                          explanation
+                            ? 'bg-emerald-600 text-white'
+                            : isExplaining
+                            ? 'bg-indigo-600 text-white animate-pulse'
+                            : 'bg-stone-100 text-stone-500 dark:bg-stone-800 dark:text-stone-400'
+                        }`}
+                      >
+                        {explanation ? '✓' : '2'}
+                      </div>
+                      <div className="flex-1">
+                        <span className="font-semibold text-stone-900 dark:text-stone-100 block">
+                          2. Conceptual Explanation
+                        </span>
+                        <span className="text-stone-500 dark:text-stone-400 text-[11px]">
+                          {explanation
+                            ? 'Explanation generated'
+                            : isExplaining
+                            ? 'Gemma is synthesizing...'
+                            : 'Ready to generate'}
+                        </span>
+                      </div>
+                    </li>
+
+                    {/* Step 3: Knowledge Check Quiz */}
+                    <li className="flex items-start gap-3">
+                      <div
+                        className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold shrink-0 mt-0.5 ${
+                          quizQuestions
+                            ? 'bg-emerald-600 text-white'
+                            : isGeneratingQuiz
+                            ? 'bg-indigo-600 text-white animate-pulse'
+                            : 'bg-stone-100 text-stone-500 dark:bg-stone-800 dark:text-stone-400'
+                        }`}
+                      >
+                        {quizQuestions ? '✓' : '3'}
+                      </div>
+                      <div className="flex-1">
+                        <span className="font-semibold text-stone-900 dark:text-stone-100 block">
+                          3. Knowledge Check
+                        </span>
+                        <span className="text-stone-500 dark:text-stone-400 text-[11px]">
+                          {quizQuestions
+                            ? `${quizQuestions.length} questions active`
+                            : isGeneratingQuiz
+                            ? 'Creating questions...'
+                            : '5 grounded questions'}
+                        </span>
+                      </div>
+                    </li>
+
+                    {/* Step 4: Adaptive Revision */}
+                    <li className="flex items-start gap-3">
+                      <div
+                        className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold shrink-0 mt-0.5 ${
+                          revisionContent
+                            ? 'bg-emerald-600 text-white'
+                            : isRevising
+                            ? 'bg-indigo-600 text-white animate-pulse'
+                            : 'bg-stone-100 text-stone-500 dark:bg-stone-800 dark:text-stone-400'
+                        }`}
+                      >
+                        {revisionContent ? '✓' : '4'}
+                      </div>
+                      <div className="flex-1">
+                        <span className="font-semibold text-stone-900 dark:text-stone-100 block">
+                          4. Adaptive Revision
+                        </span>
+                        <span className="text-stone-500 dark:text-stone-400 text-[11px]">
+                          {revisionContent
+                            ? 'Revision lesson active'
+                            : isRevising
+                            ? 'Personalizing lesson...'
+                            : weakConcepts.length > 0
+                            ? `${weakConcepts.length} weak concept${weakConcepts.length > 1 ? 's' : ''} saved`
+                            : 'Unlocks if concepts missed'}
+                        </span>
+                      </div>
+                    </li>
+                  </ol>
                 </div>
 
-                {/* Multimodal Source and Alt-Text Note */}
-                {extractedMeta && extractedMeta.sourceType !== 'text' && (
-                  <div className="p-3 rounded-2xl bg-amber-50/70 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/60 text-xs text-amber-900 dark:text-amber-200 flex items-center justify-between gap-2">
-                    <span className="flex items-center gap-2">
-                      <FileText className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0" />
+                {/* 2. REAL LEARNING PULSE (STRICTLY FROM ACTUAL DATA) */}
+                <div className="p-5 rounded-3xl bg-white/90 dark:bg-stone-900/90 border border-stone-200/80 dark:border-stone-800 shadow-xs space-y-3">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-xs font-bold uppercase tracking-wider text-stone-500 dark:text-stone-400">
+                      Learning Pulse
+                    </h3>
+                    <button
+                      type="button"
+                      onClick={() => setActiveTab('progress')}
+                      className="text-[11px] text-indigo-600 dark:text-indigo-400 hover:underline font-semibold cursor-pointer"
+                    >
+                      View All
+                    </button>
+                  </div>
+
+                  {quizHistory.length === 0 ? (
+                    <div className="p-3.5 rounded-2xl bg-white dark:bg-stone-800 border border-stone-200/90 dark:border-stone-700 text-center text-xs text-stone-600 dark:text-stone-300 space-y-2 shadow-2xs">
+                      <p>Your learning progress will appear here after your first quiz.</p>
+                      <button
+                        type="button"
+                        onClick={handleGenerateQuiz}
+                        disabled={!material.trim() || isGeneratingQuiz}
+                        className="text-[11px] font-semibold text-indigo-600 dark:text-indigo-400 hover:underline disabled:opacity-50 cursor-pointer"
+                      >
+                        Take a quiz to start tracking
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="space-y-2.5">
+                      <div className="grid grid-cols-3 gap-2 text-center">
+                        <div className="p-2.5 rounded-xl bg-white dark:bg-stone-800 border border-stone-200/90 dark:border-stone-700 shadow-2xs">
+                          <span className="text-[10px] text-stone-600 dark:text-stone-400 block font-semibold">Quizzes</span>
+                          <span className="text-base font-bold text-[#1e1b24] dark:text-stone-100">{quizHistory.length}</span>
+                        </div>
+                        <div className="p-2.5 rounded-xl bg-white dark:bg-stone-800 border border-stone-200/90 dark:border-stone-700 shadow-2xs">
+                          <span className="text-[10px] text-stone-600 dark:text-stone-400 block font-semibold">Avg Score</span>
+                          <span className="text-base font-bold text-indigo-600 dark:text-indigo-400">
+                            {Math.round(quizHistory.reduce((acc, curr) => acc + curr.percentage, 0) / quizHistory.length)}%
+                          </span>
+                        </div>
+                        <div className="p-2.5 rounded-xl bg-white dark:bg-stone-800 border border-stone-200/90 dark:border-stone-700 shadow-2xs">
+                          <span className="text-[10px] text-stone-600 dark:text-stone-400 block font-semibold">Weak</span>
+                          <span className="text-base font-bold text-amber-700 dark:text-amber-400">{weakConcepts.length}</span>
+                        </div>
+                      </div>
+
+                      {weakConcepts.length > 0 && (
+                        <div className="p-2.5 rounded-xl bg-amber-50/70 dark:bg-amber-950/30 border border-amber-200/70 dark:border-amber-800/60 text-[11px] text-amber-900 dark:text-amber-200 flex items-center justify-between">
+                          <span>{weakConcepts.length} concept{weakConcepts.length > 1 ? 's' : ''} flagged for review</span>
+                          <button
+                            type="button"
+                            onClick={() => setActiveTab('progress')}
+                            className="font-semibold underline ml-1 cursor-pointer"
+                          >
+                            Review
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+
+                {/* 3. ACCESSIBILITY & AUDIO TIP */}
+                <div className="p-4 rounded-3xl bg-indigo-50/60 dark:bg-indigo-950/30 border border-indigo-200/70 dark:border-indigo-800/60 text-xs text-indigo-950 dark:text-indigo-200 space-y-1.5 shadow-2xs">
+                  <div className="font-semibold flex items-center gap-1.5">
+                    <Sparkles className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
+                    <span>Clean Audio Read-Aloud</span>
+                  </div>
+                  <p className="text-[11px] text-indigo-900/80 dark:text-indigo-300/80 leading-relaxed">
+                    StudyBud automatically strips emojis and markdown symbols before speech synthesis, so explanations sound natural and distraction-free.
+                  </p>
+                </div>
+              </aside>
+            </div>
+
+            {/* SEPARATED LEARNING OUTPUTS SECTION */}
+            <div className="space-y-8 pt-4">
+              {/* 2. EXPLANATION PANEL */}
+              {explanation && (
+                <section
+                  ref={explanationRef}
+                  className="bg-white dark:bg-stone-900/90 border border-stone-200/80 dark:border-stone-800 rounded-3xl p-5 sm:p-7 shadow-xs transition-all space-y-4"
+                  aria-labelledby="explanation-heading"
+                >
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-stone-200/80 dark:border-stone-800">
+                    <div className="flex items-center gap-2.5">
+                      <span className="p-1.5 rounded-xl bg-indigo-600 text-white shadow-sm shadow-indigo-500/25">
+                        <Sparkles className="w-4 h-4" />
+                      </span>
+                      <div>
+                        <h3
+                          id="explanation-heading"
+                          className="text-lg font-bold text-stone-900 dark:text-stone-100"
+                        >
+                          Gemma 4 Explanation
+                        </h3>
+                        <span className="text-xs text-stone-500 dark:text-stone-400">
+                          Language: {language} {simpleLanguage ? '• Simplified Mode' : ''}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Browser Text-to-Speech Player */}
+                    <TextToSpeech text={explanation} language={language} label="Read Aloud" />
+                  </div>
+
+                  {/* Multimodal Source and Alt-Text Note */}
+                  {extractedMeta && extractedMeta.sourceType !== 'text' && (
+                    <div className="p-3 rounded-2xl bg-emerald-50/80 dark:bg-emerald-950/40 border border-emerald-200/80 dark:border-emerald-800/60 text-xs text-emerald-950 dark:text-emerald-200 flex items-center justify-between gap-2 shadow-2xs">
+                      <span className="flex items-center gap-2">
+                        <FileText className="w-4 h-4 text-emerald-700 dark:text-emerald-400 shrink-0" />
+                        <span>
+                          Grounded in <strong>{extractedMeta.sourceType.toUpperCase()}</strong>: {extractedMeta.sourceName}
+                        </span>
+                      </span>
+                      {extractedMeta.pageCount && (
+                        <span className="font-mono text-[11px] bg-emerald-200/70 dark:bg-emerald-900 px-2 py-0.5 rounded-full">
+                          {extractedMeta.pageCount} pages
+                        </span>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Adaptive Context Notice if weak concepts were sent */}
+                  {explanationWeakConcepts.length > 0 && (
+                    <div className="p-3 rounded-2xl bg-indigo-50/80 dark:bg-indigo-950/40 border border-indigo-200/80 dark:border-indigo-800/60 text-xs text-indigo-950 dark:text-indigo-200 flex items-center gap-2 shadow-2xs">
+                      <Sparkles className="w-4 h-4 text-indigo-600 dark:text-indigo-400 shrink-0" />
                       <span>
-                        Grounded in <strong>{extractedMeta.sourceType.toUpperCase()}</strong>: {extractedMeta.sourceName}
+                        <strong>Personalized for you:</strong> Gemma adapted this explanation to connect and clarify your previous weak concepts: {explanationWeakConcepts.join(', ')}.
                       </span>
-                    </span>
-                    {extractedMeta.pageCount && (
-                      <span className="font-mono text-[11px] bg-amber-200/60 dark:bg-amber-900 px-2 py-0.5 rounded-full">
-                        {extractedMeta.pageCount} pages
-                      </span>
-                    )}
+                    </div>
+                  )}
+
+                  {/* Markdown Rendered Explanation Body */}
+                  <div className="prose prose-sm dark:prose-invert max-w-none text-stone-800 dark:text-stone-200 leading-relaxed font-sans space-y-4">
+                    <ReactMarkdown>{formatExplanationForDisplay(explanation)}</ReactMarkdown>
                   </div>
-                )}
 
-                {/* Adaptive Context Notice if weak concepts were sent */}
-                {explanationWeakConcepts.length > 0 && (
-                  <div className="p-3 rounded-2xl bg-orange-50/70 dark:bg-orange-950/30 border border-orange-200 dark:border-orange-800/60 text-xs text-orange-900 dark:text-orange-200 flex items-center gap-2">
-                    <Sparkles className="w-4 h-4 text-orange-600 dark:text-orange-400 shrink-0" />
-                    <span>
-                      <strong>Personalized for you:</strong> Gemma adapted this explanation to connect and clarify your previous weak concepts: {explanationWeakConcepts.join(', ')}.
+                  {/* Next step prompt */}
+                  <div className="pt-4 border-t border-stone-200/80 dark:border-stone-800 flex flex-col sm:flex-row items-center justify-between gap-3">
+                    <span className="text-xs text-stone-500 dark:text-stone-400">
+                      Ready to test your understanding of this material?
                     </span>
+                    <button
+                      type="button"
+                      onClick={handleGenerateQuiz}
+                      disabled={isGeneratingQuiz}
+                      className="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold shadow-xs flex items-center gap-1.5 transition-transform active:scale-95 disabled:opacity-50 cursor-pointer"
+                    >
+                      <HelpCircle className="w-3.5 h-3.5" />
+                      Take Knowledge Check Quiz
+                    </button>
                   </div>
-                )}
+                </section>
+              )}
 
-                {/* Markdown Rendered Explanation Body */}
-                <div className="prose prose-sm dark:prose-invert max-w-none text-zinc-800 dark:text-zinc-200 leading-relaxed font-sans space-y-4">
-                  <ReactMarkdown>{formatExplanationForDisplay(explanation)}</ReactMarkdown>
-                </div>
+              {/* 3. QUIZ PLAYER */}
+              {quizQuestions && (
+                <section ref={quizRef} aria-label="Knowledge check quiz section">
+                  <QuizPlayer
+                    questions={quizQuestions}
+                    onQuizComplete={handleQuizComplete}
+                    onRequestRevision={handleRequestRevision}
+                    isRevising={isRevising}
+                  />
+                </section>
+              )}
 
-                {/* Next step prompt */}
-                <div className="pt-4 border-t border-zinc-200 dark:border-zinc-800 flex flex-col sm:flex-row items-center justify-between gap-3">
-                  <span className="text-xs text-zinc-500 dark:text-zinc-400">
-                    Ready to test your understanding of this material?
-                  </span>
-                  <button
-                    type="button"
-                    onClick={handleGenerateQuiz}
-                    disabled={isGeneratingQuiz}
-                    className="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-white text-xs font-semibold shadow-sm flex items-center gap-1.5 transition-transform active:scale-95 disabled:opacity-50"
-                  >
-                    <HelpCircle className="w-3.5 h-3.5" />
-                    Take Knowledge Check Quiz
-                  </button>
-                </div>
-              </section>
-            )}
-
-            {/* 3. QUIZ PLAYER */}
-            {quizQuestions && (
-              <section ref={quizRef} aria-label="Knowledge check quiz section">
-                <QuizPlayer
-                  questions={quizQuestions}
-                  onQuizComplete={handleQuizComplete}
-                  onRequestRevision={handleRequestRevision}
-                  isRevising={isRevising}
-                />
-              </section>
-            )}
-
-            {/* 4. ADAPTIVE REVISION SECTION */}
-            {revisionContent && (
-              <section ref={revisionRef} aria-label="Adaptive revision section">
-                <RevisionSection
-                  revisionContent={revisionContent}
-                  targetedConcepts={revisionConcepts}
-                  language={language}
-                  onMarkMastered={handleMarkMastered}
-                  onRetakeQuiz={handleGenerateQuiz}
-                />
-              </section>
-            )}
+              {/* 4. ADAPTIVE REVISION SECTION */}
+              {revisionContent && (
+                <section ref={revisionRef} aria-label="Adaptive revision section">
+                  <RevisionSection
+                    revisionContent={revisionContent}
+                    targetedConcepts={revisionConcepts}
+                    language={language}
+                    onMarkMastered={handleMarkMastered}
+                    onRetakeQuiz={handleGenerateQuiz}
+                  />
+                </section>
+              )}
+            </div>
           </div>
         )}
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-zinc-200 dark:border-zinc-800 py-6 text-center text-xs text-zinc-500 dark:text-zinc-400 mt-12 bg-white/50 dark:bg-zinc-950/50">
+      <footer className="border-t border-stone-200/80 dark:border-stone-800/80 py-6 text-center text-xs text-stone-500 dark:text-stone-400 mt-12 bg-white/40 dark:bg-stone-950/40">
         <div className="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
           <span>StudyBud • Powered by Google Gemma 4 &amp; @google/genai SDK</span>
           <span>Accessibility-first • Device-local private learning history</span>

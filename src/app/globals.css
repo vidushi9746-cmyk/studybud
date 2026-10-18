@@ -1,8 +1,14 @@
 @import "tailwindcss";
 
 :root {
-  --background: #faf8f5;
-  --foreground: #1c1917;
+  --background: #faf7f2;
+  --foreground: #1e1b24;
+  --card-bg: #ffffff;
+  --card-border: #e8e3da;
+  --lavender-primary: #6351de;
+  --lavender-light: #f3f0fd;
+  --sage-accent: #3d6f4c;
+  --sage-light: #edf5ef;
 }
 
 @theme inline {
@@ -14,8 +20,14 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #121110;
-    --foreground: #f5f5f4;
+    --background: #151319;
+    --foreground: #f6f4f8;
+    --card-bg: #1f1d24;
+    --card-border: #312d3b;
+    --lavender-primary: #8b7cf6;
+    --lavender-light: #252033;
+    --sage-accent: #6ba87d;
+    --sage-light: #1c2720;
   }
 }
 
@@ -45,7 +57,9 @@ html[data-contrast="high"] body {
 
 html[data-contrast="high"] .bg-white,
 html[data-contrast="high"] .bg-zinc-50,
-html[data-contrast="high"] .bg-amber-50 {
+html[data-contrast="high"] .bg-amber-50,
+html[data-contrast="high"] .bg-indigo-50,
+html[data-contrast="high"] .bg-emerald-50 {
   background-color: #000000 !important;
   border-color: #ffffff !important;
   color: #ffffff !important;
@@ -58,8 +72,48 @@ body {
   min-height: 100vh;
 }
 
-/* Accessible focus ring */
+/* Accessible visible keyboard focus ring with soft lavender */
 *:focus-visible {
-  outline: 2px solid #f59e0b !important;
+  outline: 2.5px solid #6351de !important;
   outline-offset: 2px !important;
+}
+
+/* Ensure select, option, and form controls have explicit, readable contrast across themes */
+select,
+input,
+textarea {
+  color: #1e1b24;
+}
+
+@media (prefers-color-scheme: dark) {
+  select,
+  input,
+  textarea {
+    color: #f6f4f8;
+  }
+}
+
+select option {
+  background-color: #ffffff;
+  color: #1e1b24;
+}
+
+@media (prefers-color-scheme: dark) {
+  select option {
+    background-color: #1f1d24;
+    color: #f6f4f8;
+  }
+}
+
+html[data-contrast="high"] select,
+html[data-contrast="high"] input,
+html[data-contrast="high"] textarea {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+  border-color: #ffffff !important;
+}
+
+html[data-contrast="high"] select option {
+  background-color: #000000 !important;
+  color: #ffffff !important;
 }

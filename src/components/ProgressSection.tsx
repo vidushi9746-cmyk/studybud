@@ -30,19 +30,19 @@ export default function ProgressSection({
       : 0;
 
   return (
-    <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-3xl p-5 sm:p-7 shadow-sm transition-all space-y-6">
+    <div className="bg-white dark:bg-stone-900/90 border border-stone-200/80 dark:border-stone-800 rounded-3xl p-5 sm:p-7 shadow-xs transition-all space-y-6">
       {/* Header and Privacy/Storage Distinction Banner */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-zinc-200 dark:border-zinc-800">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-stone-200/80 dark:border-stone-800">
         <div>
           <div className="flex items-center gap-2">
-            <span className="p-1.5 rounded-xl bg-orange-100 dark:bg-orange-950/70 text-orange-800 dark:text-orange-300">
+            <span className="p-1.5 rounded-xl bg-indigo-50 dark:bg-indigo-950/70 text-indigo-700 dark:text-indigo-300">
               <TrendingUp className="w-4 h-4" />
             </span>
-            <h3 className="text-lg font-bold text-zinc-900 dark:text-zinc-100">
+            <h3 className="text-lg font-bold text-stone-900 dark:text-stone-100">
               Your Learning Progress & History
             </h3>
           </div>
-          <p className="text-xs text-zinc-600 dark:text-zinc-400 mt-1">
+          <p className="text-xs text-stone-600 dark:text-stone-400 mt-1">
             Track quiz attempts, identify recurring weak concepts, and review past explanations.
           </p>
         </div>
@@ -61,9 +61,9 @@ export default function ProgressSection({
         )}
       </div>
 
-      {/* Storage Distinction Notice */}
-      <div className="p-3.5 rounded-2xl bg-amber-50/70 dark:bg-amber-950/30 border border-amber-200/70 dark:border-amber-800/50 flex items-start gap-2.5 text-xs text-amber-900 dark:text-amber-200">
-        <ShieldCheck className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
+      {/* Storage Distinction Notice (Muted Sage Green) */}
+      <div className="p-3.5 rounded-2xl bg-emerald-50/70 dark:bg-emerald-950/30 border border-emerald-200/70 dark:border-emerald-800/50 flex items-start gap-2.5 text-xs text-emerald-950 dark:text-emerald-200 shadow-2xs">
+        <ShieldCheck className="w-4 h-4 text-emerald-700 dark:text-emerald-400 shrink-0 mt-0.5" />
         <div>
           <span className="font-semibold block mb-0.5">Device Storage (Private to you)</span>
           Your learning history, quiz scores, and weak concepts are stored entirely in your local browser (localStorage). The Gemma 4 model is stateless and does not retain your private study history between sessions—StudyBud only sends relevant weak concepts to adapt explanations when you request them.
@@ -72,21 +72,21 @@ export default function ProgressSection({
 
       {/* Overview Stat Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-        <div className="p-4 rounded-2xl bg-zinc-50 dark:bg-zinc-800/50 border border-zinc-200/80 dark:border-zinc-800">
-          <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400">Quizzes Completed</span>
-          <div className="text-2xl font-bold text-zinc-900 dark:text-zinc-100 mt-1">{totalQuizzes}</div>
+        <div className="p-4 rounded-2xl bg-white dark:bg-stone-800 border border-stone-200/90 dark:border-stone-700 shadow-2xs">
+          <span className="text-xs font-semibold text-stone-600 dark:text-stone-400">Quizzes Completed</span>
+          <div className="text-2xl font-bold text-[#1e1b24] dark:text-stone-100 mt-1">{totalQuizzes}</div>
         </div>
 
-        <div className="p-4 rounded-2xl bg-zinc-50 dark:bg-zinc-800/50 border border-zinc-200/80 dark:border-zinc-800">
-          <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400">Average Quiz Score</span>
-          <div className="text-2xl font-bold text-amber-600 dark:text-amber-400 mt-1">
+        <div className="p-4 rounded-2xl bg-white dark:bg-stone-800 border border-stone-200/90 dark:border-stone-700 shadow-2xs">
+          <span className="text-xs font-semibold text-stone-600 dark:text-stone-400">Average Quiz Score</span>
+          <div className="text-2xl font-bold text-indigo-600 dark:text-indigo-400 mt-1">
             {totalQuizzes > 0 ? `${averageScore}%` : '—'}
           </div>
         </div>
 
-        <div className="p-4 rounded-2xl bg-zinc-50 dark:bg-zinc-800/50 border border-zinc-200/80 dark:border-zinc-800">
-          <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400">Active Weak Concepts</span>
-          <div className="text-2xl font-bold text-orange-600 dark:text-orange-400 mt-1">
+        <div className="p-4 rounded-2xl bg-white dark:bg-stone-800 border border-stone-200/90 dark:border-stone-700 shadow-2xs">
+          <span className="text-xs font-semibold text-stone-600 dark:text-stone-400">Active Weak Concepts</span>
+          <div className="text-2xl font-bold text-amber-700 dark:text-amber-400 mt-1">
             {weakConcepts.length}
           </div>
         </div>
@@ -94,13 +94,13 @@ export default function ProgressSection({
 
       {/* Weak Concepts List */}
       <div>
-        <h4 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 mb-2.5 flex items-center gap-1.5">
-          <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+        <h4 className="text-sm font-semibold text-stone-900 dark:text-stone-100 mb-2.5 flex items-center gap-1.5">
+          <Sparkles className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
           Weak Concepts Identified for Adaptive Revision
         </h4>
 
         {weakConcepts.length === 0 ? (
-          <div className="p-4 rounded-2xl border border-dashed border-zinc-200 dark:border-zinc-800 text-center text-xs text-zinc-500 dark:text-zinc-400">
+          <div className="p-4 rounded-2xl border border-dashed border-stone-200 dark:border-stone-800 text-center text-xs text-stone-500 dark:text-stone-400">
             No weak concepts recorded yet. Take a quiz to let StudyBud discover topics you may need extra help with!
           </div>
         ) : (
@@ -108,16 +108,16 @@ export default function ProgressSection({
             {weakConcepts.map((item) => (
               <span
                 key={item.concept}
-                className="inline-flex items-center gap-2 pl-3 pr-2 py-1.5 rounded-full bg-orange-50 dark:bg-orange-950/40 border border-orange-200 dark:border-orange-800 text-xs text-orange-900 dark:text-orange-200 font-medium"
+                className="inline-flex items-center gap-2 pl-3 pr-2 py-1.5 rounded-full bg-indigo-50/70 dark:bg-indigo-950/40 border border-indigo-200/80 dark:border-indigo-800/60 text-xs text-indigo-950 dark:text-indigo-200 font-medium shadow-2xs"
               >
                 <span>{item.concept}</span>
-                <span className="px-1.5 py-0.2 rounded-full bg-orange-200/60 dark:bg-orange-900 text-[10px] font-mono">
+                <span className="px-1.5 py-0.2 rounded-full bg-indigo-200/70 dark:bg-indigo-900 text-indigo-900 dark:text-indigo-200 text-[10px] font-mono">
                   {item.count}× missed
                 </span>
                 <button
                   type="button"
                   onClick={() => onRemoveWeakConcept(item.concept)}
-                  className="p-0.5 rounded-full hover:bg-orange-200 dark:hover:bg-orange-800 text-orange-700 dark:text-orange-300 transition-colors focus-visible:ring-1 focus-visible:ring-orange-500"
+                  className="p-0.5 rounded-full hover:bg-indigo-200 dark:hover:bg-indigo-800 text-indigo-700 dark:text-indigo-300 transition-colors focus-visible:ring-1 focus-visible:ring-indigo-500"
                   aria-label={`Mark ${item.concept} as mastered and remove`}
                   title="Mark as mastered"
                 >
@@ -131,13 +131,13 @@ export default function ProgressSection({
 
       {/* Recent Quizzes */}
       <div>
-        <h4 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 mb-2.5 flex items-center gap-1.5">
-          <Award className="w-3.5 h-3.5 text-amber-500" />
+        <h4 className="text-sm font-semibold text-stone-900 dark:text-stone-100 mb-2.5 flex items-center gap-1.5">
+          <Award className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
           Recent Quiz Results
         </h4>
 
         {quizHistory.length === 0 ? (
-          <div className="p-4 rounded-2xl border border-dashed border-zinc-200 dark:border-zinc-800 text-center text-xs text-zinc-500 dark:text-zinc-400">
+          <div className="p-4 rounded-2xl border border-dashed border-stone-200 dark:border-stone-800 text-center text-xs text-stone-500 dark:text-stone-400">
             No quiz attempts recorded yet.
           </div>
         ) : (
@@ -145,13 +145,13 @@ export default function ProgressSection({
             {quizHistory.slice(0, 5).map((q) => (
               <div
                 key={q.id}
-                className="p-3 rounded-2xl bg-zinc-50 dark:bg-zinc-800/40 border border-zinc-200/80 dark:border-zinc-800 flex items-center justify-between text-xs gap-3"
+                className="p-3 rounded-2xl bg-white dark:bg-stone-800 border border-stone-200/90 dark:border-stone-700 flex items-center justify-between text-xs gap-3 shadow-2xs"
               >
                 <div className="truncate flex-1">
-                  <span className="font-semibold text-zinc-900 dark:text-zinc-100 block truncate">
+                  <span className="font-semibold text-[#1e1b24] dark:text-stone-100 block truncate">
                     {q.materialTitle}
                   </span>
-                  <span className="text-zinc-500 text-[11px]">
+                  <span className="text-stone-500 text-[11px]">
                     {new Date(q.timestamp).toLocaleDateString()} at{' '}
                     {new Date(q.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                   </span>
@@ -159,12 +159,12 @@ export default function ProgressSection({
 
                 <div className="flex items-center gap-2 shrink-0">
                   <span
-                    className={`font-mono font-bold px-2.5 py-0.5 rounded-full ${
+                    className={`font-mono font-bold px-2.5 py-0.5 rounded-full border ${
                       q.percentage >= 80
-                        ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300'
+                        ? 'bg-emerald-50 text-emerald-800 border-emerald-200/80 dark:bg-emerald-950/60 dark:text-emerald-300 dark:border-emerald-800'
                         : q.percentage >= 60
-                        ? 'bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300'
-                        : 'bg-rose-100 text-rose-800 dark:bg-rose-950 dark:text-rose-300'
+                        ? 'bg-indigo-50 text-indigo-800 border border-indigo-200/80 dark:bg-indigo-950/60 dark:text-indigo-300 dark:border-indigo-800'
+                        : 'bg-rose-50 text-rose-800 border border-rose-200/80 dark:bg-rose-950/60 dark:text-rose-300 dark:border-rose-800'
                     }`}
                   >
                     {q.score}/{q.total} ({q.percentage}%)
